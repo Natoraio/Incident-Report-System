@@ -13,28 +13,32 @@ const Login = () => {
     e.preventDefault();
     console.log(username, password, userType);
     Axios.post("http://localhost:8800/api/login", {
+      userType: userType,
       username: username,
       password: password,
-      userType: userType,
     })
       .then((response) => {
         console.log(response); // Log the server response to check it
-        if (userType == "fStaff") {
+        if (response.data.success) {
           Swal.fire({
             title: "Welcome!",
             text: "Login successful!",
             icon: "success",
             confirmButtonText: "OK",
           });
-          navigate("/home");
-        } else if (userType == "handler") {
+          if (userType == "fStaff") {
+            navigate("/home");
+          }
+          if (userType == "handler") {
+            navigate("/handler-home");
+          }
+        } else {
           Swal.fire({
-            title: "Welcome!",
-            text: "Login successful!",
-            icon: "success",
+            title: "Error!",
+            text: "Login failed. Please try again.",
+            icon: "error",
             confirmButtonText: "OK",
           });
-          navigate("/handler-home");
         }
       })
       .catch((error) => {
@@ -64,9 +68,8 @@ const Login = () => {
               }}
             >
               <option value="">Select User Type</option>
-              <option value="admin">Admin</option>
               <option value="fStaff">Faculty Staff</option>
-              <option value="mStaff">Maintenance Staff</option>
+              <option value="handler">Incident Handler</option>
             </select>
             <label className="pt-2">Username:</label>
             <input
