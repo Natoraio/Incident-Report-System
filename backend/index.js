@@ -82,5 +82,35 @@ app.post("/api/login", (req, res) => {
   }
 });
 
+app.post("/api/submitForm", (req, res) => {
+  const incidentName = req.body.incidentName;
+  let incidentType;
+  if (req.body.otherIncidentType == null) {
+    incidentType = req.body.incidentType;
+  } else {
+    incidentType = req.body.otherIncidentType;
+  }
+  const description = req.body.description;
+  const incidentDate = req.body.incidentDate;
+  const incidentTime = req.body.incidentTime;
+  const incidentLocation = req.body.incidentLocation;
+  const media = req.body.media;
+  const userID = req.body.userID;
+
+  const sql =
+    "INSERT INTO user_report (Incident_name, Incident_type, Description, Incident_status, Location, Date, Time, Picture, User_id) VALUES (?,?,?,?,?,?,?,?)";
+  const values = [
+    incidentName,
+    incidentType,
+    description,
+    "Pending",
+    incidentLocation,
+    incidentDate,
+    incidentTime,
+    media,
+    userID,
+  ];
+});
+
 // app.use("/api", require("./router.js"));
 // router.route("http://localhost:3000/create").post(create_user);

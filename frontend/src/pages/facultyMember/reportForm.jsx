@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import Swal from "sweetalert2";
 
 const ReportForm = () => {
+  const [incidentName, setIncidentName] = useState("");
   const [incidentType, setIncidentType] = useState("");
   const [otherIncidentType, setOtherIncidentType] = useState("");
   const [description, setDescription] = useState("");
-  const [damage, setDamage] = useState("");
-  const [affectedSystems, setAffectedSytems] = useState("");
+  // const [damage, setDamage] = useState("");
+  // const [affectedSystems, setAffectedSytems] = useState("");
   const [incidentDate, setIncidentDate] = useState("");
   const [incidentTime, setIncidentTime] = useState("");
   const [incidentLocation, setIncidentLocation] = useState("");
@@ -18,10 +19,31 @@ const ReportForm = () => {
     // Handle form submission logic here
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // When the reader is done reading the file, the result attribute contains the Base64 string
+        setMedia(reader.result);
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL (Base64 format)
+    }
+  };
+
   return (
     <div>
       <h1>Incident Report Form</h1>
       <form onSubmit={handleSubmit} className="flex flex-col">
+        <label>
+          Incident Name:
+          <input
+            type="text"
+            value={incidentName}
+            onChange={(e) => setIncidentName(e.target.value)}
+          />
+        </label>
         <label>
           Incident Type:
           <select
@@ -56,7 +78,7 @@ const ReportForm = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
         </label>
-        <label>
+        {/* <label>
           Resulting Damage:
           <textarea
             value={damage}
@@ -70,7 +92,7 @@ const ReportForm = () => {
             value={affectedSystems}
             onChange={(e) => setAffectedSytems(e.target.value)}
           />
-        </label>
+        </label> */}
         <label>
           Incident Date:
           <input
@@ -106,9 +128,11 @@ const ReportForm = () => {
         <label>
           Media Upload:
           <input
+            id="file"
+            name="image"
             type="file"
             accept=".jpg, .jpeg, .png, .pdf"
-            onChange={(e) => setMedia(e.target.files[0])}
+            onChange={handleImageChange}
           />
         </label>
         <br />

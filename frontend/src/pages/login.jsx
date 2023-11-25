@@ -20,6 +20,7 @@ const Login = () => {
       .then((response) => {
         console.log(response); // Log the server response to check it
         if (response.data.success) {
+          sessionStorage.setItem("token", response.data.token);
           Swal.fire({
             title: "Welcome!",
             text: "Login successful!",

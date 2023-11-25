@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import * as jwt_decode from "jwt-decode";
 
 const UserMain = () => {
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwt_decode(token);
+      console.log(decodedToken);
+    }
+  }, []);
+
   return (
     <>
       <div className="text-content ml-10">
