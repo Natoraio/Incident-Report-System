@@ -5,13 +5,16 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import UserMain from "./pages/facultyMember/userMain";
 import ErrorPage from "./pages/errorPage";
-import AdminMain from "./pages/adminMain";
 import Login from "./pages/login";
 import ReportForm from "./pages/facultyMember/reportForm";
 import { Navigate } from "react-router-dom";
 import ReportProgress from "./pages/facultyMember/reportProgress";
 import ReportSummary from "./pages/facultyMember/reportSummary";
-import AnalystMain from "./pages/incidentAnalyst/analystMain";
+import ResponseForm from "./pages/incidentHandler/responseForm";
+import HandlerMain from "./pages/incidentHandler/handlerMain";
+import IncidentInsights from "./pages/incidentHandler/incidentInsights";
+import IncidentDetails from "./pages/incidentDetails";
+import IncidentHistory from "./pages/incidentHistory";
 
 const router = createBrowserRouter([
   {
@@ -21,13 +24,9 @@ const router = createBrowserRouter([
   },
   {
     path: "/home",
-
     element: <UserMain />,
   },
-  {
-    path: "/admin",
-    element: <AdminMain />,
-  },
+
   {
     path: "/report",
     element: <ReportForm />,
@@ -40,9 +39,26 @@ const router = createBrowserRouter([
     path: "/report-summary",
     element: <ReportSummary />,
   },
+
   {
-    path: "/analyst-home",
-    element: <AnalystMain />,
+    path: "/response-form",
+    element: <ResponseForm />,
+  },
+  {
+    path: "/handler-home",
+    element: <HandlerMain />,
+  },
+  {
+    path: "/incident-insights",
+    element: <IncidentInsights />,
+  },
+  {
+    path: "/incident-details",
+    element: <IncidentDetails />,
+  },
+  {
+    path: "/incident-history",
+    element: <IncidentHistory />,
   },
 ]);
 

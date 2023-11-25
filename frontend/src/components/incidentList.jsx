@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const IncidentList = ({ name, progress, severity, date }) => {
   const handleClick = () => {
@@ -7,11 +8,14 @@ const IncidentList = ({ name, progress, severity, date }) => {
   };
 
   return (
-    <div className="incident-tab" onClick={handleClick}>
-      <h3>{name}</h3>
+    <div onClick={handleClick}>
+      <h1>{name}</h1>
       <p>Progress/Status: {progress}</p>
       <p>Severity Level: {severity}</p>
       <p>Date: {date}</p>
+      <button className="incident-tab p-3 bg-orange-500 ml-2">
+        <Link to={"/response-form"}>Create Response Report</Link>
+      </button>
       {/* Add more incident details here */}
     </div>
   );

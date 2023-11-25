@@ -1,25 +1,51 @@
 import React, { useState } from "react";
+import Axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleUserTypeChange = (e) => {
-    setUserType(e.target.value);
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
+    console.log(username, password, userType);
+    Axios.post("http://localhost:8800/api/login", {
+      username: username,
+      password: password,
+      userType: userType,
+    })
+      .then((response) => {
+        console.log(response); // Log the server response to check it
+        if (userType == "fStaff") {
+          Swal.fire({
+            title: "Welcome!",
+            text: "Login successful!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          navigate("/home");
+        } else if (userType == "handler") {
+          Swal.fire({
+            title: "Welcome!",
+            text: "Login successful!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          navigate("/handler-home");
+        }
+      })
+      .catch((error) => {
+        console.error("Axios Error:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Login failed. Please try again.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
   };
 
   return (
@@ -33,19 +59,23 @@ const Login = () => {
             <select
               className="p-3 rounded"
               value={userType}
-              onChange={handleUserTypeChange}
+              onChange={(event) => {
+                setUserType(event.target.value);
+              }}
             >
               <option value="">Select User Type</option>
               <option value="admin">Admin</option>
               <option value="fStaff">Faculty Staff</option>
               <option value="mStaff">Maintenance Staff</option>
             </select>
-            <label className="pt-2">Email/Username:</label>
+            <label className="pt-2">Username:</label>
             <input
               className="p-3 rounded"
               type="text"
-              value={email}
-              onChange={handleEmailChange}
+              value={username}
+              onChange={(event) => {
+                setUsername(event.target.value);
+              }}
             />
 
             <label className="pt-2">Password:</label>
@@ -53,7 +83,9 @@ const Login = () => {
               className="p-3 rounded mb-5"
               type="password"
               value={password}
-              onChange={handlePasswordChange}
+              onChange={(event) => {
+                setPassword(event.target.value);
+              }}
             />
           </div>
 
