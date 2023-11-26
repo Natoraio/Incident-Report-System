@@ -41,7 +41,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/response-form",
+    path: "/response-form/:id",
     element: <ResponseForm />,
   },
   {
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
     element: <IncidentInsights />,
   },
   {
-    path: "/incident-details",
+    path: "/incident-details/:id",
     element: <IncidentDetails />,
   },
   {
