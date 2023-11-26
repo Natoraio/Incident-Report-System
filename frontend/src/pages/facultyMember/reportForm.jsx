@@ -72,7 +72,7 @@ const ReportForm = () => {
       incidentLocation: incidentLocation,
       incidentDate: incidentDate,
       incidentTime: incidentTime,
-      media: media,
+      media: imageBase64,
       userID: userId,
     }).then((response) => {
       if (response.data.success) {
@@ -94,6 +94,7 @@ const ReportForm = () => {
     });
   };
 
+  const [imageBase64, setImageBase64] = useState("");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
 
@@ -101,7 +102,7 @@ const ReportForm = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         // When the reader is done reading the file, the result attribute contains the Base64 string
-        setMedia(reader.result);
+        setImageBase64(reader.result);
       };
       reader.readAsDataURL(file); // Read the file as a data URL (Base64 format)
     }
@@ -223,7 +224,7 @@ const ReportForm = () => {
             id="file"
             name="image"
             type="file"
-            accept=".jpg, .jpeg, .png, .pdf"
+            accept=".jpg, .jpeg, .png"
             onChange={handleImageChange}
           />
         </label>

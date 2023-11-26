@@ -1,7 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import Axios from "axios";
+import { KJUR } from "jsrsasign";
 
 const ResponseForm = () => {
+  const urlPath = window.location.pathname;
+  const parts = urlPath.split("/");
+  const lastPart = parts.pop() || parts.pop();
+
+  const [handlerId, setHandlerId] = useState("");
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
+  const [incidents, setIncidents] = useState([]);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = KJUR.jws.JWS.parse(token);
+      const handlerId = decodedToken.payloadObj.handlerId;
+      setHandlerId(handlerId);
+      console.log("Handler ID: " + handlerId);
+      //   console.log(decodedToken.payloadObj);
+    }
+  }, []);
+
   const [media, setMedia] = useState("");
   const [reponseDescription, setResponseDescription] = useState("");
   const [criticalityLevel, setCriticalityLevel] = useState("");
@@ -17,129 +39,174 @@ const ResponseForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+    Axios.post("http://localhost:8800/api/submitHandlerReport", {
+      responseDescription: reponseDescription,
+      criticalityLevel: criticalityLevel,
+      affectedHosts: affectedHosts,
+      IPAddress: IPAddress,
+      sourceIP: sourceIP,
+      comHost: comHost,
+      otherApp: otherApp,
+      impactAssessment: impactAssessment,
+      actionTaken: actionTaken,
+      plannedAction: plannedAction,
+      additionalNotes: additionalNotes,
+      media: media,
+      handlerID: handlerId,
+      reportID: lastPart,
+    })
+      .then((response) => {
+        // Handle success response
+        console.log(response.data);
+        if (response.data.success) {
+          Swal.fire({
+            title: "Success!",
+            text: "Report submitted successfully!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+        } else {
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to submit report",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      })
+      .catch((error) => {
+        // Handle error response
+        console.error(error);
+        Swal.fire("Error", "Failed to submit report", "error");
+      });
   };
 
   return (
-    <div>
-      <h1>Incident Response Form</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col">
-        <br />
-        <label>
-          Response Description:
-          <textarea
-            className="rounded w-96"
-            value={reponseDescription}
-            onChange={(e) => setResponseDescription(e.target.value)}
-          />
-        </label>
-        <label>
-          Criticality Level
-          <select
-            className="p-3 rounded"
-            value={criticalityLevel}
-            onChange={(e) => setCriticalityLevel(e.target.value)}
-          >
-            <option value="">Select Criticality</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-        </label>
-        <br />
-        <label>
-          Affected Hosts:
-          <input
-            type="text"
-            value={affectedHosts}
-            onChange={(e) => setAffectedHosts(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          IP Address:
-          <input
-            type="text"
-            value={IPAddress}
-            onChange={(e) => setIPAddress(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Source IP:
-          <input
-            type="text"
-            value={sourceIP}
-            onChange={(e) => setSourceIP(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Communication Host:
-          <input
-            type="text"
-            value={comHost}
-            onChange={(e) => setComHost(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Other Application:
-          <input
-            type="text"
-            value={otherApp}
-            onChange={(e) => setOtherApp(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Impact Assessment:
+    <div className="container mx-auto flex">
+      <div className="w-1/2">
+        <h1 className="text-2xl font-bold mb-4">Incident Response Form</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col">
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Response Description:</span>
+            <textarea
+              className="rounded w-96 p-2"
+              value={reponseDescription}
+              onChange={(e) => setResponseDescription(e.target.value)}
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Criticality Level:</span>
+            <select
+              className="p-2 rounded"
+              value={criticalityLevel}
+              onChange={(e) => setCriticalityLevel(e.target.value)}
+            >
+              <option value="unassigned">Select Criticality</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Affected Hosts:</span>
+            <input
+              type="text"
+              value={affectedHosts}
+              onChange={(e) => setAffectedHosts(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">IP Address:</span>
+            <input
+              type="text"
+              value={IPAddress}
+              onChange={(e) => setIPAddress(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Source IP:</span>
+            <input
+              type="text"
+              value={sourceIP}
+              onChange={(e) => setSourceIP(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Communication Host:</span>
+            <input
+              type="text"
+              value={comHost}
+              onChange={(e) => setComHost(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Other Application:</span>
+            <input
+              type="text"
+              value={otherApp}
+              onChange={(e) => setOtherApp(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+        </form>
+      </div>
+      <div className="w-1/2">
+        <label className="mb-4 flex items-center">
+          <span className="w-40">Impact Assessment:</span>
           <input
             type="text"
             value={impactAssessment}
             onChange={(e) => setImpactAssessment(e.target.value)}
+            className="rounded p-2"
           />
         </label>
-        <br />
-        <label>
-          Action Taken:
+        <label className="mb-4 flex items-center">
+          <span className="w-40">Action Taken:</span>
           <input
             type="text"
             value={actionTaken}
             onChange={(e) => setActionTaken(e.target.value)}
+            className="rounded p-2"
           />
         </label>
-        <br />
-        <label>
-          Planned Action:
+        <label className="mb-4 flex items-center">
+          <span className="w-40">Planned Action:</span>
           <input
             type="text"
             value={plannedAction}
             onChange={(e) => setPlannedAction(e.target.value)}
+            className="rounded p-2"
           />
         </label>
-        <br />
-        <label>
-          Additional Notes:
+        <label className="mb-4 flex items-center">
+          <span className="w-40">Additional Notes:</span>
           <textarea
-            className="rounded w-96"
+            className="rounded w-96 p-2"
             value={additionalNotes}
             onChange={(e) => setAdditionalNotes(e.target.value)}
           />
         </label>
-        <label>
-          Upload Media:
+        <label className="mb-4 flex items-center">
+          <span className="w-40">Upload Media:</span>
           <input
             type=".png, .jpg, .jpeg, .pdf"
             value={media}
             onChange={(e) => setMedia(e.target.value)}
+            className="rounded p-2"
           />
         </label>
-        <br />
-        <button type="submit" onClick={handleSubmit}>
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
           Submit
         </button>
-      </form>
+      </div>
     </div>
   );
 };

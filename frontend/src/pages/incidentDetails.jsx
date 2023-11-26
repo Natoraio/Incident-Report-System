@@ -51,16 +51,18 @@ const IncidentDetails = () => {
       console.log(response.data.result[0]);
       //Faculty Member
       setIncidentName(response.data.result[0].Incident_name);
-      setIncidentDate(response.data.result[0].Incident_date);
-      setIncidentTime(response.data.result[0].Incident_time);
-      setIncidentLocation(response.data.result[0].Incident_location);
+      setIncidentDate(
+        new Date(response.data.result[0].Date).toISOString().split("T")[0]
+      );
+      setIncidentTime(response.data.result[0].Time);
+      setIncidentLocation(response.data.result[0].Location);
       setIncidentType(response.data.result[0].Incident_type);
       setOtherIncidentType(response.data.result[0].Other_incident_type);
       setDescription(response.data.result[0].Description);
       //setDamage(response.data.result[0].Damage);
       //setAffectedSytems(response.data.result[0].Affected_systems);
       setUserInfo(response.data.result[0].User_id);
-      setMedia(response.data.result[0].Media);
+      setMedia(response.data.result[0].Picture);
 
       //Handler
       setResponseDescription(response.data.result[0].Response_description);
@@ -121,10 +123,9 @@ const IncidentDetails = () => {
             <span className="font-bold">Reporter's ID:</span>
             <span className="font-normal ml-2">{userInfo}</span>
           </p>
-          <p>
-            <span className="font-bold">Media:</span>
-            <span className="font-normal ml-2">{media}</span>
-          </p>
+          <div className="incident-image">
+            <img src={media} alt="Photo of incident" />
+          </div>
         </div>
         {/* Incident Handler Side */}
         <div className="w-1/2 ml-20">

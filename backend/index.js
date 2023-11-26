@@ -157,8 +157,8 @@ app.post("/api/submitForm", (req, res) => {
       console.log("The report ID is: " + reportID);
 
       db.query(
-        "INSERT INTO handler_report (Report_id, User_id) VALUES (?,?)",
-        [reportID, values[9]],
+        "INSERT INTO handler_report (Report_id, User_id, Criticality) VALUES (?,?,?)",
+        [reportID, values[9], "Unassigned"],
         (err, result) => {
           if (err) {
             console.error(err);
@@ -209,36 +209,50 @@ app.get("/api/getIncidentDetails", (req, res) => {
   });
 });
 
-// app.post("/api/submitHandlerReport", (req, res) => {
-//   const responseDescription = req.body.responseDescription;
-//   const criticality = req.body.criticalityLevel;
-//   const affectedHosts = req.body.affectedHosts;
-//   const IPAddress = req.body.IPAddress;
-//   const sourceIP = req.body.sourceIP;
-//   const comHost = req.body.comHost;
-//   const otherApp = req.body.otherApp;
-//   const impactAssessment = req.body.impactAssessment;
-//   const actionTaken = req.body.actionTaken;
-//   const plannedAction = req.body.plannedAction;
-//   const additionalNotes = req.body.additionalNotes;
-//   const handlerID = req.body.handlerID;
-//   // auto-fill
-//   const reportID = req.body.reportID;
-//   const userID = req.body.userID;
-//   const media = req.body.media;
-//   const sql =
-//     "INSERT INTO handler_report (Report_id, Criticality, Description) VALUES (?,?,?)";
-//   const values = [reportID, criticality, description];
-//   db.query(sql, values, (err, result) => {
-//     if (err) {
-//       console.error(err);
-//       return res.json({ success: false, message: "Insert Unsuccessful" });
-//     } else {
-//       console.log(result);
-//       return res.json({ success: true, result });
-//     }
-//   });
-// });
+app.post("/api/submitHandlerReport", (req, res) => {
+  const responseDescription = req.body.responseDescription;
+  const criticality = req.body.criticalityLevel;
+  const affectedHosts = req.body.affectedHosts;
+  const IPAddress = req.body.IPAddress;
+  const sourceIP = req.body.sourceIP;
+  const comHost = req.body.comHost;
+  const otherApp = req.body.otherApp;
+  const impactAssessment = req.body.impactAssessment;
+  const actionTaken = req.body.actionTaken;
+  const plannedAction = req.body.plannedAction;
+  const additionalNotes = req.body.additionalNotes;
+  const handlerID = req.body.handlerID;
+  // auto-fill
+  const reportID = req.body.reportID;
+  const userID = req.body.userID;
+  const media = req.body.media;
+  const sql =
+    "UPDATE handler_report SET Affected_host = ?, IP_address = ?, Source_IP = ?, Communication_host = ?, Criticality = ?, Response_description = ?, Picture = ?, Impact_assessment=?, Action_taken=?, Planned_action=?, Additional_note=?, Handler_id=? WHERE Report_id = ?";
+  const values = [
+    affectedHosts,
+    IPAddress,
+    sourceIP,
+    comHost,
+    criticality,
+    responseDescription,
+    media,
+    impactAssessment,
+    actionTaken,
+    plannedAction,
+    additionalNotes,
+    handlerID,
+    reportID,
+  ];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: "Insert Unsuccessful" });
+    } else {
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});
 
 // app.use("/api", require("./router.js"));
 // router.route("http://localhost:3000/create").post(create_user);
