@@ -119,16 +119,18 @@ app.get("/api/getUserInfo", (req, res) => {
 });
 
 app.post("/api/submitForm", (req, res) => {
-  const incidentName = req.body.incidentName;
-  const incidentType = req.body.incidentType;
-  const otherIncidentType = req.body.otherIncidentType;
-  const description = req.body.description;
-  const incidentDate = req.body.incidentDate;
-  const incidentTime = req.body.incidentTime;
-  const incidentLocation = req.body.incidentLocation;
-  const media = req.body.media;
-  const userID = req.body.userID;
-  const incidentStatus = req.body.incidentStatus;
+  const {
+    incidentName,
+    incidentType,
+    otherIncidentType,
+    description,
+    incidentDate,
+    incidentTime,
+    incidentLocation,
+    media,
+    userID,
+    incidentStatus,
+  } = req.body;
 
   const sql =
     "INSERT INTO user_report (Incident_name, Incident_type, Other_incident_type, Description, Incident_status, Location, Date, Time, Picture, User_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -144,13 +146,32 @@ app.post("/api/submitForm", (req, res) => {
     media,
     userID,
   ];
+
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error(err);
       return res.json({ success: false, message: "Insert Unsuccessful" });
     } else {
       console.log(result);
-      return res.json({ success: true, result });
+      const reportID = result.insertId;
+      console.log("The report ID is: " + reportID);
+
+      db.query(
+        "INSERT INTO handler_report (Report_id, User_id) VALUES (?,?)",
+        [reportID, values[9]],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.json({
+              success: false,
+              message: "Insert Unsuccessful2",
+            });
+          } else {
+            console.log(result);
+            return res.json({ success: true, result });
+          }
+        }
+      );
     }
   });
 });
@@ -188,22 +209,36 @@ app.get("/api/getIncidentDetails", (req, res) => {
   });
 });
 
-app.post("/api/submitHandlerReport", (req, res) => {
-  const reportID = req.body.reportID;
-  const handlerID = req.body.handlerID;
-  const sql =
-    "INSERT INTO handler_report (Report_id, Criticality, Description) VALUES (?,?,?)";
-  const values = [reportID, criticality, description];
-  db.query(sql, values, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.json({ success: false, message: "Insert Unsuccessful" });
-    } else {
-      console.log(result);
-      return res.json({ success: true, result });
-    }
-  });
-});
+// app.post("/api/submitHandlerReport", (req, res) => {
+//   const responseDescription = req.body.responseDescription;
+//   const criticality = req.body.criticalityLevel;
+//   const affectedHosts = req.body.affectedHosts;
+//   const IPAddress = req.body.IPAddress;
+//   const sourceIP = req.body.sourceIP;
+//   const comHost = req.body.comHost;
+//   const otherApp = req.body.otherApp;
+//   const impactAssessment = req.body.impactAssessment;
+//   const actionTaken = req.body.actionTaken;
+//   const plannedAction = req.body.plannedAction;
+//   const additionalNotes = req.body.additionalNotes;
+//   const handlerID = req.body.handlerID;
+//   // auto-fill
+//   const reportID = req.body.reportID;
+//   const userID = req.body.userID;
+//   const media = req.body.media;
+//   const sql =
+//     "INSERT INTO handler_report (Report_id, Criticality, Description) VALUES (?,?,?)";
+//   const values = [reportID, criticality, description];
+//   db.query(sql, values, (err, result) => {
+//     if (err) {
+//       console.error(err);
+//       return res.json({ success: false, message: "Insert Unsuccessful" });
+//     } else {
+//       console.log(result);
+//       return res.json({ success: true, result });
+//     }
+//   });
+// });
 
 // app.use("/api", require("./router.js"));
 // router.route("http://localhost:3000/create").post(create_user);
