@@ -32,7 +32,7 @@ const router = createBrowserRouter([
     element: <ReportForm />,
   },
   {
-    path: "/incident-progress",
+    path: "/incident-progress/:id",
     element: <ReportProgress />,
   },
   {

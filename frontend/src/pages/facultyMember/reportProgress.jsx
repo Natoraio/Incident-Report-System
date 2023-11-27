@@ -1,22 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import IncidentProgress from "../../components/incidentProgress";
+import Axios from "axios";
 
-const HandlerMain = () => {
-  const incidentList = [
-    {
-      name: "Incident 1",
-      progress: "Ongoing",
-      severity: "High",
-      date: "2023-11-22",
-    },
-    {
-      name: "Incident 2",
-      progress: "Assigned",
-      severity: "Medium",
-      date: "2023-11-25",
-    },
-  ];
+const ReportProgress = () => {
+  const urlPath = window.location.pathname;
+  const parts = urlPath.split("/");
+  const lastPart = parts.pop() || parts.pop();
+  console.log(lastPart);
+
+  const [incidentList, setIncidentList] = useState([]);
+
+  useEffect(() => {
+    Axios.get("http://localhost:8800/api/getIncidentProgress", {
+      params: { userID: lastPart },
+    })
+      .then((response) => {
+        console.log(response.data);
+        const incidents = response.data.result.map((item) => ({
+          name: item.Incident_name,
+          progress: item.Incident_status,
+          severity: item.Severity,
+          date: item.Date,
+        }));
+        setIncidentList(incidents);
+      })
+      .catch((error) => {
+        console.error("Error fetching incident progress:", error);
+      });
+  }, []);
+
   return (
     <>
       <div className="text-content ml-10">
@@ -52,4 +65,4 @@ const HandlerMain = () => {
   );
 };
 
-export default HandlerMain;
+export default ReportProgress;

@@ -209,6 +209,23 @@ app.get("/api/getIncidentDetails", (req, res) => {
   });
 });
 
+app.get("/api/getPicture", (req, res) => {
+  const reportID = req.body.ReportID;
+  console.log("The parsed in ID is" + reportID);
+  const sql = "SELECT Picture FROM user_report WHERE Report_id = ?";
+  const values = [reportID];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: "Login failed" });
+    } else {
+      console.log("WOOHOOOOO");
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});
+
 app.post("/api/submitHandlerReport", (req, res) => {
   const responseDescription = req.body.responseDescription;
   const criticality = req.body.criticalityLevel;
@@ -227,7 +244,7 @@ app.post("/api/submitHandlerReport", (req, res) => {
   const userID = req.body.userID;
   const media = req.body.media;
   const sql =
-    "UPDATE handler_report SET Affected_host = ?, IP_address = ?, Source_IP = ?, Communication_host = ?, Criticality = ?, Response_description = ?, Picture = ?, Impact_assessment=?, Action_taken=?, Planned_action=?, Additional_note=?, Handler_id=? WHERE Report_id = ?";
+    "UPDATE handler_report SET Affected_host = ?, IP_address = ?, Source_IP = ?, Communication_host = ?, Criticality = ?, Response_description = ?, Picture_handler = ?, Impact_assessment=?, Action_taken=?, Planned_action=?, Additional_note=?, Handler_id=? WHERE Report_id = ?";
   const values = [
     affectedHosts,
     IPAddress,
@@ -249,6 +266,40 @@ app.post("/api/submitHandlerReport", (req, res) => {
       return res.json({ success: false, message: "Insert Unsuccessful" });
     } else {
       console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});
+
+app.get("/api/getMonthlySummary", (req, res) => {
+  const year = req.body.year;
+  const month = req.body.month;
+  const sql =
+    "SELECT COUNT(*) FROM user_report WHERE MONTH(Date) = ? AND YEAR(Date) = ?";
+  db.query(sql, [month, year], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: "Insert Unsuccessful" });
+    } else {
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});
+
+app.get("/api/getIncidentProgress", (req, res) => {
+  const userID = req.query.userID;
+  console.log("The parsed in ID is" + userID);
+  const sql = "SELECT * FROM user_report WHERE User_id = ?";
+  db.query(sql, [userID], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: "Insert Unsuccessful" });
+    } else {
+      console.log(result);
+      //   db.query("SELECT Criticality FROM handler_report WHERE Report_id = ?", [
+      //     result[0].Report_id,
+      //   ]);
       return res.json({ success: true, result });
     }
   });

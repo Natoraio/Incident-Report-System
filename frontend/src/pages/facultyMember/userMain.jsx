@@ -47,7 +47,7 @@ const UserMain = () => {
           <Link to={"/report"}>Report an Incident</Link>
         </button>
         <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/incident-progress"}>View Report Progress</Link>
+          <Link to={"/incident-progress/" + userId}>View Report Progress</Link>
         </button>
         <button className="p-3 bg-orange-500 ml-2">
           <Link to={"/report-summary"}>Report Summary</Link>

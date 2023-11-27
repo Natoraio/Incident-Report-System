@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Axios from "axios";
 import { KJUR } from "jsrsasign";
+import { useNavigate } from "react-router-dom";
 
 const ResponseForm = () => {
+  const navigate = useNavigate();
+
   const urlPath = window.location.pathname;
   const parts = urlPath.split("/");
   const lastPart = parts.pop() || parts.pop();
@@ -65,6 +68,7 @@ const ResponseForm = () => {
             icon: "success",
             confirmButtonText: "OK",
           });
+          navigate("/handler-home");
         } else {
           Swal.fire({
             title: "Error!",
