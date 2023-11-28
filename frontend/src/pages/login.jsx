@@ -10,6 +10,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
+    if ((username, password, userType == "")) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please fill in all fields.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
     e.preventDefault();
     console.log(username, password, userType);
     Axios.post("http://localhost:8800/api/login", {
@@ -27,10 +35,10 @@ const Login = () => {
             icon: "success",
             confirmButtonText: "OK",
           });
-          if (userType == "fStaff") {
+          if (userType == "Staff") {
             navigate("/home");
           }
-          if (userType == "handler") {
+          if (userType == "Incident handler") {
             navigate("/handler-home");
           }
         } else {
@@ -69,8 +77,8 @@ const Login = () => {
               }}
             >
               <option value="">Select User Type</option>
-              <option value="fStaff">Faculty Staff</option>
-              <option value="handler">Incident Handler</option>
+              <option value="Staff">Faculty Staff</option>
+              <option value="Incident handler">Incident Handler</option>
             </select>
             <label className="pt-2">Username:</label>
             <input

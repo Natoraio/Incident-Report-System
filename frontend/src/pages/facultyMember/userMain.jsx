@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { KJUR } from "jsrsasign";
 import Axios from "axios";
 
@@ -9,24 +9,27 @@ const UserMain = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [userType, setUserType] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token) {
       const decodedToken = KJUR.jws.JWS.parse(token);
-      const userId = decodedToken.payloadObj.userId;
-      setUserId(userId);
+      const userID = decodedToken.payloadObj.userID;
+      setUserId(userID);
       console.log(decodedToken.payloadObj);
+    } else {
+      navigate("/login");
     }
     if (userId) {
       Axios.get("http://localhost:8800/api/getUserInfo", {
-        params: { UserID: userId, UserType: "fStaff" },
+        params: { UserID: userId },
       })
         .then((response) => {
-          setUsername(response.data.result[0].Username);
-          setName(response.data.result[0].User_name);
-          setEmail(response.data.result[0].Email);
-          setUserType("fStaff");
+          setUsername(response.data.result[0].username);
+          setName(response.data.result[0].name);
+          setEmail(response.data.result[0].email);
+          setUserType(response.data.result[0].role);
           console.log(response.data.result[0]);
         })
         .catch((error) => {

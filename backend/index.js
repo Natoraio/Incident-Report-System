@@ -15,107 +15,126 @@ const db = mysql.createConnection({
   user: "root",
   host: "localhost",
   password: "root",
-  database: "incident",
+  database: "cyberincident",
 });
 
+// app.post("/api/login", (req, res) => {
+//   const userType = req.body.userType;
+//   const username = req.body.username;
+//   const password = req.body.password;
+//   console.log("step 1 is called");
+//   if (userType == "fStaff") {
+//     const sql = "SELECT * FROM user WHERE Username = ? AND Password = ?";
+//     const values = [username, password];
+//     const jwt = require("jsonwebtoken");
+//     const secretKey = "albaniaaa"; // Replace with your own secret key
+
+//     db.query(sql, values, (err, result) => {
+//       if (err) {
+//         console.error(err);
+//         return res.json({ success: false, message: "Login failed" });
+//       }
+//       if (result.length > 0) {
+//         const userId = result[0].User_ID; // Assuming the user ID is stored in the 'id' column
+//         const token = jwt.sign({ userId, userType }, secretKey, {
+//           expiresIn: "1h",
+//         }); // Create a token with the user ID
+
+//         // Store the token in the sessions object
+//         sessions[token] = userId;
+
+//         return res.json({
+//           success: true,
+//           data: result,
+//           token,
+//         });
+//       } else {
+//         console.log("Login failed");
+//         return res.json({ success: false, message: "Login failed" });
+//       }
+//     });
+//   } else if (userType == "handler") {
+//     const sql = "SELECT * FROM handler WHERE Username = ? AND Password = ?";
+//     const values = [username, password];
+//     const jwt = require("jsonwebtoken");
+//     const secretKey = "braaazill"; // Replace with your own secret key
+
+//     db.query(sql, values, (err, result) => {
+//       if (err) {
+//         console.error(err);
+//         return res.json({ success: false, message: "Login failed" });
+//       }
+//       if (result.length > 0) {
+//         const handlerId = result[0].Handler_id; // Assuming the user ID is stored in the 'id' column
+//         const token = jwt.sign({ handlerId, userType }, secretKey); // Create a token with the user ID
+
+//         // Store the token in the sessions object
+//         sessions[token] = handlerId;
+
+//         return res.json({
+//           success: true,
+//           data: result,
+//           token,
+//         });
+//       } else {
+//         console.log("Login failed");
+//         return res.json({ success: false, message: "Login failed" });
+//       }
+//     });
+//   }
+// });
+
 app.post("/api/login", (req, res) => {
-  const userType = req.body.userType;
   const username = req.body.username;
   const password = req.body.password;
-  console.log("step 1 is called");
-  if (userType == "fStaff") {
-    const sql = "SELECT * FROM user WHERE Username = ? AND Password = ?";
-    const values = [username, password];
-    const jwt = require("jsonwebtoken");
-    const secretKey = "albaniaaa"; // Replace with your own secret key
+  const userType = req.body.userType;
+  const jwt = require("jsonwebtoken");
+  const secretKey = "Albaniaaa"; // Replace with your own secret key
 
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.json({ success: false, message: "Login failed" });
-      }
-      if (result.length > 0) {
-        const userId = result[0].User_ID; // Assuming the user ID is stored in the 'id' column
-        const token = jwt.sign({ userId, userType }, secretKey, {
-          expiresIn: "1h",
-        }); // Create a token with the user ID
+  const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+  const values = [username, password];
 
-        // Store the token in the sessions object
-        sessions[token] = userId;
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: "Login failed" });
+    }
+    if (result.length > 0) {
+      const userID = result[0].userID; // Assuming the user ID is stored in the 'id' column
+      const token = jwt.sign({ userID }, secretKey, {
+        expiresIn: "1h",
+      }); // Create a token with the user ID and type
 
-        return res.json({
-          success: true,
-          data: result,
-          token,
-        });
-      } else {
-        console.log("Login failed");
-        return res.json({ success: false, message: "Login failed" });
-      }
-    });
-  } else if (userType == "handler") {
-    const sql = "SELECT * FROM handler WHERE Username = ? AND Password = ?";
-    const values = [username, password];
-    const jwt = require("jsonwebtoken");
-    const secretKey = "braaazill"; // Replace with your own secret key
+      // Store the token in the sessions object
+      sessions[token] = userID;
 
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.json({ success: false, message: "Login failed" });
-      }
-      if (result.length > 0) {
-        const handlerId = result[0].Handler_id; // Assuming the user ID is stored in the 'id' column
-        const token = jwt.sign({ handlerId, userType }, secretKey); // Create a token with the user ID
-
-        // Store the token in the sessions object
-        sessions[token] = handlerId;
-
-        return res.json({
-          success: true,
-          data: result,
-          token,
-        });
-      } else {
-        console.log("Login failed");
-        return res.json({ success: false, message: "Login failed" });
-      }
-    });
-  }
+      return res.json({
+        success: true,
+        data: result,
+        token,
+      });
+    } else {
+      console.log("Login failed");
+      return res.json({ success: false, message: "Login failed" });
+    }
+  });
 });
 
 app.get("/api/getUserInfo", (req, res) => {
-  if (req.query.UserType == "fStaff") {
-    console.log("getUserInfo is called with userid: " + req.query.UserID);
-    const userID = req.query.UserID;
-    console.log(userID);
-    const sql = "SELECT * FROM user WHERE User_ID = ?";
-    const values = [userID];
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.json({ success: false, message: "Login failed" });
-      } else {
-        console.log(result);
-        return res.json({ success: true, result });
-      }
-    });
-  }
-  if (req.query.UserType == "handler") {
-    console.log("getUserInfo is called with handlerid: " + req.query.HandlerID);
-    const handlerID = req.query.HandlerID;
-    const sql = "SELECT * FROM handler WHERE Handler_id = ?";
-    const values = [handlerID];
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.json({ success: false, message: "Login failed" });
-      } else {
-        console.log(result);
-        return res.json({ success: true, result });
-      }
-    });
-  }
+  console.log("getUserInfo is called with userid: " + req.query.UserID);
+  const userID = req.query.UserID;
+  console.log(userID);
+  const sql = "SELECT * FROM users WHERE userID = ?";
+  const values = [userID];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: "Login failed" });
+    } else {
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
 });
 
 app.post("/api/submitForm", (req, res) => {
@@ -133,7 +152,7 @@ app.post("/api/submitForm", (req, res) => {
   } = req.body;
 
   const sql =
-    "INSERT INTO user_report (Incident_name, Incident_type, Other_incident_type, Description, Incident_status, Location, Date, Time, Picture, User_id) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO incidents (incidentName, incidentTypeID, otherIncidentType, description, status, location, dateOccur, timeOccur, picture) VALUES (?,?,?,?,?,?,?,?,?)";
   const values = [
     incidentName,
     incidentType,
@@ -144,21 +163,22 @@ app.post("/api/submitForm", (req, res) => {
     incidentDate,
     incidentTime,
     media,
-    userID,
   ];
+
+  const newDate = new Date();
+
+  const dateReported = newDate.toISOString().split("T")[0]; // yyyy-mm-dd
+  const timeReported = newDate.toISOString().split("T")[1].split(".")[0]; // xx:xx:xx
 
   db.query(sql, values, (err, result) => {
     if (err) {
       console.error(err);
       return res.json({ success: false, message: "Insert Unsuccessful" });
     } else {
-      console.log(result);
       const reportID = result.insertId;
-      console.log("The report ID is: " + reportID);
-
       db.query(
-        "INSERT INTO handler_report (Report_id, User_id, Criticality) VALUES (?,?,?)",
-        [reportID, values[9], "Unassigned"],
+        "INSERT INTO incident_report (incidentID, reporterUserID, dateReported, timeReported) VALUES (?,?,?,?)",
+        [reportID, userID, dateReported, timeReported],
         (err, result) => {
           if (err) {
             console.error(err);
@@ -167,8 +187,21 @@ app.post("/api/submitForm", (req, res) => {
               message: "Insert Unsuccessful2",
             });
           } else {
-            console.log(result);
-            return res.json({ success: true, result });
+            db.query(
+              "INSERT INTO handler_report (incidentID, criticalID) VALUES (?,?)",
+              [reportID, "4"],
+              (err, result) => {
+                if (err) {
+                  console.error(err);
+                  return res.json({
+                    success: false,
+                    message: "Insert Unsuccessful3",
+                  });
+                } else {
+                  return res.json({ success: true, result });
+                }
+              }
+            );
           }
         }
       );

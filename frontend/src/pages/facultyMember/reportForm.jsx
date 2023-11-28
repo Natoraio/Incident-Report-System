@@ -23,9 +23,11 @@ const ReportForm = () => {
     const token = sessionStorage.getItem("token");
     if (token) {
       const decodedToken = KJUR.jws.JWS.parse(token);
-      const userId = decodedToken.payloadObj.userId;
+      const userId = decodedToken.payloadObj.userID;
       setUserId(userId);
       console.log(decodedToken.payloadObj);
+    } else {
+      navigate("/login");
     }
   }, [userId]);
   const validateForm = () => {
@@ -37,7 +39,7 @@ const ReportForm = () => {
       Swal.fire("Error!", "Please select the incident type.", "error");
       return false;
     }
-    if (incidentType === "other" && !otherIncidentType.trim()) {
+    if (incidentType === "13" && !otherIncidentType.trim()) {
       Swal.fire("Error!", "Please specify the other incident type.", "error");
       return false;
     }
@@ -128,32 +130,20 @@ const ReportForm = () => {
             onChange={(e) => setIncidentType(e.target.value)}
           >
             <option value="">Select Incident Type</option>
-            <option value="Compromised systems / applications">
-              Compromised systems / applications
-            </option>
-            <option value="Comprimised user credentials">
-              Comprimised user credentials
-            </option>
-            <option value="Network attacks">Network attacks</option>
-            <option value="Malware">Malware</option>
-            <option value="Lost equipment / theft">
-              Lost equipment / theft
-            </option>
-            <option value="Physical break-in">Physical break-in</option>
-            <option value="Social engineering">Social engineering</option>
-            <option value="Law enforcement request">
-              Law enforcement request
-            </option>
-            <option value="Policy violation">Policy violation</option>
-            <option value="Legal / copyright violation">
-              Legal / copyright violation
-            </option>
-            <option value="PII data breach / data exposure">
-              PII data breach / data exposure
-            </option>
-            <option value="other">Other</option>
+            <option value="1">Compromised systems / applications</option>
+            <option value="2">Comprimised user credentials</option>
+            <option value="3">Network attacks</option>
+            <option value="4">Malware</option>
+            <option value="5">Lost equipment / theft</option>
+            <option value="6">Physical break-in</option>
+            <option value="7">Social engineering</option>
+            <option value="9">Law enforcement request</option>
+            <option value="10">Policy violation</option>
+            <option value="11">Legal / copyright violation</option>
+            <option value="12">PII data breach / data exposure</option>
+            <option value="13">Other</option>
           </select>
-          {incidentType == "other" && (
+          {incidentType == "13" && (
             <input
               className="p-3 rounded"
               type="text"
