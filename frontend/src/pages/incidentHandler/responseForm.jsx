@@ -20,7 +20,7 @@ const ResponseForm = () => {
     const token = sessionStorage.getItem("token");
     if (token) {
       const decodedToken = KJUR.jws.JWS.parse(token);
-      const handlerId = decodedToken.payloadObj.handlerId;
+      const handlerId = decodedToken.payloadObj.userID;
       setHandlerId(handlerId);
       console.log("Handler ID: " + handlerId);
       //   console.log(decodedToken.payloadObj);
@@ -56,7 +56,7 @@ const ResponseForm = () => {
       additionalNotes: additionalNotes,
       media: media,
       handlerID: handlerId,
-      reportID: lastPart,
+      incidentID: lastPart,
     })
       .then((response) => {
         // Handle success response
@@ -105,10 +105,10 @@ const ResponseForm = () => {
               value={criticalityLevel}
               onChange={(e) => setCriticalityLevel(e.target.value)}
             >
-              <option value="unassigned">Select Criticality</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
+              <option value="4">Select Criticality</option>
+              <option value="3">Low</option>
+              <option value="2">Medium</option>
+              <option value="1">High</option>
             </select>
           </label>
           <label className="mb-4 flex items-center">

@@ -91,8 +91,10 @@ app.post("/api/login", (req, res) => {
   const jwt = require("jsonwebtoken");
   const secretKey = "Albaniaaa"; // Replace with your own secret key
 
-  const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-  const values = [username, password];
+  const sql =
+    "SELECT * FROM users WHERE username = ? AND password = ? AND role = ?";
+  const values = [username, password, userType];
+  console.log("user type is " + userType);
 
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -101,7 +103,7 @@ app.post("/api/login", (req, res) => {
     }
     if (result.length > 0) {
       const userID = result[0].userID; // Assuming the user ID is stored in the 'id' column
-      const token = jwt.sign({ userID }, secretKey, {
+      const token = jwt.sign({ userID, userType }, secretKey, {
         expiresIn: "1h",
       }); // Create a token with the user ID and type
 
@@ -211,7 +213,7 @@ app.post("/api/submitForm", (req, res) => {
 
 app.get("/api/getIncidents", (req, res) => {
   db.query(
-    "SELECT user_report.Report_id,user_report.Incident_name,user_report.Incident_status,user_report.Date,handler_report.Handler_reportid,handler_report.Criticality FROM user_report JOIN handler_report ON user_report.Report_id = handler_report.Report_id WHERE handler_report.Criticality <> 'Resolved';",
+    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID WHERE incidents.status<>'Resolved';",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -223,19 +225,35 @@ app.get("/api/getIncidents", (req, res) => {
   );
 });
 
+// app.get("/api/getIncidentDetails", (req, res) => {
+//   const reportID = req.query.ReportID;
+//   console.log("The parsed in ID is" + reportID);
+//   const sql =
+//     "SELECT * FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID WHERE incidents.incidentID = ?";
+//   const values = [reportID];
+//   console.log(reportID);
+//   db.query(sql, values, (err, result) => {
+//     if (err) {
+//       console.error(err);
+//       return res.json({ success: false, message: "Login failed" });
+//     } else {
+//       console.log("WOOHOOOOO");
+//       console.log(result);
+//       return res.json({ success: true, result });
+//     }
+//   });
+// });
+
 app.get("/api/getIncidentDetails", (req, res) => {
-  const reportID = req.query.ReportID;
-  console.log("The parsed in ID is" + reportID);
+  const incidentID = req.query.incidentID;
+  console.log("The parsed in ID is" + incidentID);
   const sql =
-    "SELECT * FROM user_report JOIN handler_report ON user_report.Report_id = handler_report.Report_id WHERE user_report.Report_id = ?";
-  const values = [reportID];
-  console.log(reportID);
-  db.query(sql, values, (err, result) => {
+    "SELECT incidents.*, incident_report.*, handler_report.*, criticalities.criticalName AS criticality, incident_type.incidentTypeName FROM incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID WHERE incidents.incidentID = ?;";
+  db.query(sql, [incidentID], (err, result) => {
     if (err) {
       console.error(err);
-      return res.json({ success: false, message: "Login failed" });
+      return res.json({ success: false, message: "Select Unsuccessful" });
     } else {
-      console.log("WOOHOOOOO");
       console.log(result);
       return res.json({ success: true, result });
     }
@@ -245,7 +263,7 @@ app.get("/api/getIncidentDetails", (req, res) => {
 app.get("/api/getPicture", (req, res) => {
   const reportID = req.body.ReportID;
   console.log("The parsed in ID is" + reportID);
-  const sql = "SELECT Picture FROM user_report WHERE Report_id = ?";
+  const sql = "SELECT picture FROM incidents WHERE incidentID = ?";
   const values = [reportID];
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -273,16 +291,17 @@ app.post("/api/submitHandlerReport", (req, res) => {
   const additionalNotes = req.body.additionalNotes;
   const handlerID = req.body.handlerID;
   // auto-fill
-  const reportID = req.body.reportID;
+  const incidentID = req.body.incidentID;
   const userID = req.body.userID;
   const media = req.body.media;
   const sql =
-    "UPDATE handler_report SET Affected_host = ?, IP_address = ?, Source_IP = ?, Communication_host = ?, Criticality = ?, Response_description = ?, Picture_handler = ?, Impact_assessment=?, Action_taken=?, Planned_action=?, Additional_note=?, Handler_id=? WHERE Report_id = ?";
+    "UPDATE handler_report SET affectedHost = ?, IPAddress = ?, sourceIP = ?, computerHost = ?, otherApplication = ?, criticalID=?, responseDescription = ?, handlerPicture = ?, impactAssessment=?, actionTaken=?, plannedAction=?, additionalNote=? WHERE incidentID = ?";
   const values = [
     affectedHosts,
     IPAddress,
     sourceIP,
     comHost,
+    otherApp,
     criticality,
     responseDescription,
     media,
@@ -290,8 +309,7 @@ app.post("/api/submitHandlerReport", (req, res) => {
     actionTaken,
     plannedAction,
     additionalNotes,
-    handlerID,
-    reportID,
+    incidentID,
   ];
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -299,7 +317,18 @@ app.post("/api/submitHandlerReport", (req, res) => {
       return res.json({ success: false, message: "Insert Unsuccessful" });
     } else {
       console.log(result);
-      return res.json({ success: true, result });
+      db.query(
+        "UPDATE incident_report SET handlerID = ? WHERE incidentID = ?",
+        [handlerID, incidentID],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.json({ success: false, message: "Insert Unsuccessful" });
+          } else {
+            return res.json({ success: true, result });
+          }
+        }
+      );
     }
   });
 });
@@ -323,7 +352,8 @@ app.get("/api/getMonthlySummary", (req, res) => {
 app.get("/api/getIncidentProgress", (req, res) => {
   const userID = req.query.userID;
   console.log("The parsed in ID is" + userID);
-  const sql = "SELECT * FROM user_report WHERE User_id = ?";
+  const sql =
+    "SELECT incidents.*, incident_report.*, handler_report.*, criticalities.criticalName AS HandlerCriticality FROM incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID WHERE incident_report.reporterUserID = ?;";
   db.query(sql, [userID], (err, result) => {
     if (err) {
       console.error(err);

@@ -15,7 +15,7 @@ const IncidentList = ({ id, name, progress, severity, date }) => {
       <p>Severity Level: {severity}</p>
       <p>Date: {date}</p>
       <button className="incident-tab p-3 bg-orange-500 ml-2">
-        <Link to={"/response-form"}>Create Response Report</Link>
+        <Link to={"/response-form/" + id}>Create Response Report</Link>
       </button>
       <button className="incident-tab p-3 bg-orange-500 ml-2">
         <Link to={"/incident-details/" + id}>View Details</Link>

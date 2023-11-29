@@ -7,6 +7,8 @@ const IncidentDetails = () => {
   const parts = urlPath.split("/");
   const lastPart = parts.pop() || parts.pop();
   console.log(lastPart);
+  const [dateReported, setDateReported] = useState("");
+  const [timeReported, setTimeReported] = useState("");
   // Faculty Member Side
   const [userType, setUserType] = useState("");
   const [incidentName, setIncidentName] = useState("");
@@ -42,41 +44,45 @@ const IncidentDetails = () => {
     });
   };
 
+  useEffect(() => {});
+
   useEffect(() => {
     Axios.get("http://localhost:8800/api/getIncidentDetails", {
       params: {
-        ReportID: lastPart,
+        incidentID: lastPart,
       },
     }).then((response) => {
       console.log(response.data.result[0]);
+      setDateReported(response.data.result[0].dateReported.split("T")[0]);
+      setTimeReported(response.data.result[0].timeReported);
       //Faculty Member
-      setIncidentName(response.data.result[0].Incident_name);
+      setIncidentName(response.data.result[0].incidentName);
       setIncidentDate(
-        new Date(response.data.result[0].Date).toISOString().split("T")[0]
+        new Date(response.data.result[0].dateOccur).toISOString().split("T")[0]
       );
-      setIncidentTime(response.data.result[0].Time);
-      setIncidentLocation(response.data.result[0].Location);
-      setIncidentType(response.data.result[0].Incident_type);
-      setOtherIncidentType(response.data.result[0].Other_incident_type);
-      setDescription(response.data.result[0].Description);
+      setIncidentTime(response.data.result[0].timeOccur);
+      setIncidentLocation(response.data.result[0].location);
+      setIncidentType(response.data.result[0].incidentTypeName);
+      setOtherIncidentType(response.data.result[0].otherIncidentType);
+      setDescription(response.data.result[0].description);
       //setDamage(response.data.result[0].Damage);
       //setAffectedSytems(response.data.result[0].Affected_systems);
-      setUserInfo(response.data.result[0].User_id);
-      setMedia(response.data.result[0].Picture);
+      setUserInfo(response.data.result[0].reporterUserID);
+      setMedia(response.data.result[0].picture);
 
       //Handler
-      setResponseDescription(response.data.result[0].Response_description);
-      setCriticality(response.data.result[0].Criticality);
-      setAffectedHosts(response.data.result[0].Affected_host);
-      setIPAddress(response.data.result[0].IP_address);
-      setSourceIP(response.data.result[0].Source_IP);
-      setComHost(response.data.result[0].Communication_host);
-      setOtherApp(response.data.result[0].Other_application);
-      setImpactAssessment(response.data.result[0].Impact_assessment);
-      setActionTaken(response.data.result[0].Action_taken);
-      setPlannedAction(response.data.result[0].Planned_action);
-      setAdditionalNotes(response.data.result[0].Additional_note);
-      setHandlerID(response.data.result[0].Handler_id);
+      setResponseDescription(response.data.result[0].responseDescription);
+      setCriticality(response.data.result[0].criticality);
+      setAffectedHosts(response.data.result[0].affectedHost);
+      setIPAddress(response.data.result[0].IPAddress);
+      setSourceIP(response.data.result[0].sourceIP);
+      setComHost(response.data.result[0].computerHost);
+      setOtherApp(response.data.result[0].otherApplication);
+      setImpactAssessment(response.data.result[0].impactAssessment);
+      setActionTaken(response.data.result[0].actionTaken);
+      setPlannedAction(response.data.result[0].plannedAction);
+      setAdditionalNotes(response.data.result[0].additionalNote);
+      setHandlerID(response.data.result[0].handlerID);
     });
   }, []);
 
@@ -84,17 +90,20 @@ const IncidentDetails = () => {
 
   return (
     <div className="p-4 ml-20">
-      <h1 className="mb-4 mb-10">Incident Details</h1>
+      <p>Incident Details Page</p>
+      <h1 className="mb-4 mb-10">Incident name: {incidentName}</h1>
+      <p>Issued date: {dateReported}</p>
+      <p>Issued time: {timeReported}</p>
       {/* Faculty Member Side */}
       <div className="mb-8 flex">
         <div className="w-1/2">
           <h2 className="text-2xl font-bold mb-3 text-orange-200">
             Faculty Member
           </h2>
-          <p>
+          {/* <p>
             <span className="font-bold">Incident Name:</span>
             <span className="font-normal ml-2">{incidentName}</span>
-          </p>
+          </p> */}
           <p>
             <span className="font-bold">Incident Date:</span>
             <span className="font-normal ml-2">{incidentDate}</span>

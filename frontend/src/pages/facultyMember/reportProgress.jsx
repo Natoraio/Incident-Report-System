@@ -18,10 +18,11 @@ const ReportProgress = () => {
       .then((response) => {
         console.log(response.data);
         const incidents = response.data.result.map((item) => ({
-          name: item.Incident_name,
-          progress: item.Incident_status,
-          severity: item.Severity,
-          date: item.Date,
+          name: item.incidentName,
+          progress: item.status,
+          severity: item.HandlerCriticality,
+          date: item.dateReported.split("T")[0],
+          incidentID: item.incidentID,
         }));
         setIncidentList(incidents);
       })
@@ -35,7 +36,8 @@ const ReportProgress = () => {
       <div className="text-content ml-10">
         <h1>Incident Tracking</h1>
         <h2 className="mt-5">
-          View the progress / details of your reported incidents here
+          View the progress / details of your reported incidents here. Click on
+          the individual incident to view more details!
         </h2>
 
         <div className="incident-container">
@@ -46,19 +48,14 @@ const ReportProgress = () => {
               progress={incident.progress}
               severity={incident.severity}
               date={incident.date}
+              incidentID={incident.incidentID}
             />
           ))}
         </div>
       </div>
       <div className="action-buttons ml-10 mt-10">
-        <button className="p-3 bg-orange-500">
-          <Link to={"/report"}>Create Monthly Report</Link>
-        </button>
         <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/incident-progress"}>View Data Visualization</Link>
-        </button>
-        <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/report-summary"}>Incident History</Link>
+          <Link to={"/incident-history"}>Incident History</Link>
         </button>
       </div>
     </>
