@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import Axios from "axios";
 import { KJUR } from "jsrsasign";
 import { useNavigate } from "react-router-dom";
+import withAuth from "../../components/withAuth";
 
 const ResponseForm = () => {
   const navigate = useNavigate();
@@ -215,4 +216,4 @@ const ResponseForm = () => {
   );
 };
 
-export default ResponseForm;
+export default withAuth(ResponseForm, "Incident handler");

@@ -370,3 +370,24 @@ app.get("/api/getIncidentProgress", (req, res) => {
 
 // app.use("/api", require("./router.js"));
 // router.route("http://localhost:3000/create").post(create_user);
+
+app.post("/api/resolveIncident", (req, res) => {
+  const incidentID = req.body.incidentID;
+  const handlerID = req.body.handlerID;
+  const newDate = new Date();
+
+  const date = newDate.toISOString().split("T")[0]; // yyyy-mm-dd
+  const time = newDate.toISOString().split("T")[1].split(".")[0]; // xx:xx:xx
+  const sql =
+    "UPDATE incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID SET status = 'Resolved', incident_report.dateResolved = ?, incident_report.timeResolved = ?, incident_report.handlerID = ? WHERE incidents.incidentID = ?";
+  const values = [date, time, handlerID, incidentID];
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({ success: false, message: "Insert Unsuccessful" });
+    } else {
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});

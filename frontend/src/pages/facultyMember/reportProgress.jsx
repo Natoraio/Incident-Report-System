@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import IncidentProgress from "../../components/incidentProgress";
 import Axios from "axios";
+import withAuth from "../../components/withAuth";
 
 const ReportProgress = () => {
   const urlPath = window.location.pathname;
@@ -62,4 +63,4 @@ const ReportProgress = () => {
   );
 };
 
-export default ReportProgress;
+export default withAuth(ReportProgress, "Staff");

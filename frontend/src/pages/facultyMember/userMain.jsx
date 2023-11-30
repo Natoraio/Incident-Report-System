@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { KJUR } from "jsrsasign";
 import Axios from "axios";
+import withAuth from "../../components/withAuth";
 
 const UserMain = () => {
   const [userId, setUserId] = useState("");
@@ -60,4 +61,4 @@ const UserMain = () => {
   );
 };
 
-export default UserMain;
+export default withAuth(UserMain, "Staff");

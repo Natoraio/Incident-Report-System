@@ -30,6 +30,15 @@ const HandlerMain = () => {
   };
 
   useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = KJUR.jws.JWS.parse(token);
+      const userID = decodedToken.payloadObj.userID;
+      setHandlerId(userID);
+      console.log(decodedToken.payloadObj);
+    } else {
+      navigate("/login");
+    }
     if (handlerId) {
       Axios.get("http://localhost:8800/api/getUserInfo", {
         params: { UserID: handlerId, UserType: "handler" },
@@ -104,6 +113,7 @@ const HandlerMain = () => {
                 progress={incident.status}
                 severity={incident.criticality}
                 date={incident.dateOccur.split("T")[0]}
+                handlerID={handlerId}
               />
             ))}
         </div>

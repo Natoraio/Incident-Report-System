@@ -3,6 +3,7 @@ import Swal from "sweetalert2";
 import { KJUR } from "jsrsasign";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import withAuth from "../../components/withAuth";
 
 const ReportForm = () => {
   const [incidentName, setIncidentName] = useState("");
@@ -227,4 +228,4 @@ const ReportForm = () => {
   );
 };
 
-export default ReportForm;
+export default withAuth(ReportForm, "Staff");
