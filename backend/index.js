@@ -213,7 +213,7 @@ app.post("/api/submitForm", (req, res) => {
 
 app.get("/api/getIncidents", (req, res) => {
   db.query(
-    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID WHERE incidents.status<>'Resolved';",
+    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality, incident_type.incidentTypeName AS incidentTypeName, incident_report.dateResolved as dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status<>'Resolved';",
     (err, result) => {
       if (err) {
         console.log(err);

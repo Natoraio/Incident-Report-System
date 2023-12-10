@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import IncidentList from "../../components/incidentList";
 import Axios from "axios";
 import { KJUR } from "jsrsasign";
@@ -10,8 +10,9 @@ const HandlerMain = () => {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [incidents, setIncidents] = useState([]);
-  const [navigate, setNavigate] = useState(false);
   const [naviateLogin, setNaviateLogin] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchIncidents("http://localhost:8800/api/getIncidents");
@@ -77,8 +78,21 @@ const HandlerMain = () => {
     );
   };
 
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      sessionStorage.removeItem("token");
+      navigate("/login");
+    }
+  };
+
   return (
     <>
+      <button className="p-3 m-2" onClick={handleLogout}>
+        Log out
+      </button>
+      <button className="p-3 bg-blue-500 ml-2">
+        <Link to={"/history-statistics"}>View History and Statistics</Link>
+      </button>
       <div className="text-content ml-10">
         <h1>Welcome Back! {name}</h1>
         <h2 className="mt-5">To SIIT Cyber Incident Report Database System</h2>

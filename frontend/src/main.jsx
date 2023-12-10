@@ -15,6 +15,7 @@ import HandlerMain from "./pages/incidentHandler/handlerMain";
 import IncidentInsights from "./pages/incidentHandler/incidentInsights";
 import IncidentDetails from "./pages/incidentDetails";
 import IncidentHistory from "./pages/incidentHistory";
+import HistoryStatistics from "./pages/incidentHandler/historyStatistics";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
   {
     path: "/incident-history",
     element: <IncidentHistory />,
+  },
+  {
+    path: "/history-statistics",
+    element: <HistoryStatistics />,
   },
 ]);
 
