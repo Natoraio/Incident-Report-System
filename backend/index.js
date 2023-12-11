@@ -213,7 +213,7 @@ app.post("/api/submitForm", (req, res) => {
 
 app.get("/api/getIncidents", (req, res) => {
   db.query(
-    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality, incident_type.incidentTypeName AS incidentTypeName, incident_report.dateResolved as dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status<>'Resolved';",
+    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID WHERE incidents.status<>'Resolved';",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -223,6 +223,32 @@ app.get("/api/getIncidents", (req, res) => {
       }
     }
   );
+});
+
+app.get("/api/getResolvedIncidents", (req, res) => {
+  db.query(
+    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality, incident_type.incidentTypeName AS incidentTypeName, incident_report.dateResolved as dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status='Resolved';",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // console.log(result);
+        return res.json({ incidents: result });
+      }
+    }
+  );
+});
+
+app.get("/api/getIncidentTypes", (req, res) => {
+  const month = req.body.month;
+  db.query("SELECT * FROM incident_type", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      // console.log(result);
+      return res.json({ incidentTypes: result });
+    }
+  });
 });
 
 // app.get("/api/getIncidentDetails", (req, res) => {
@@ -333,15 +359,79 @@ app.post("/api/submitHandlerReport", (req, res) => {
   });
 });
 
-app.get("/api/getMonthlySummary", (req, res) => {
+// count no. incidents that are
+app.get("/api/getIncidentCount", (req, res) => {
   const year = req.body.year;
   const month = req.body.month;
   const sql =
-    "SELECT COUNT(*) FROM user_report WHERE MONTH(Date) = ? AND YEAR(Date) = ?";
+    "SELECT COUNT(*) as incidentCount FROM incidents WHERE MONTH(dateOccur) = ? and YEAR(dateOccur) = ?";
   db.query(sql, [month, year], (err, result) => {
     if (err) {
       console.error(err);
-      return res.json({ success: false, message: "Insert Unsuccessful" });
+      return res.json({
+        success: false,
+        message: "getIncidentCount unsuccessful",
+      });
+    } else {
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});
+
+// count and calculate avg resolve time
+app.get("/api/getAverageResolveTime", (req, res) => {
+  const month = req.body.month;
+  const year = req.body.year;
+  const sql =
+    "SELECT AVG(TIMESTAMPDIFF(HOUR, TIMESTAMP(dateOccur, timeOccur), TIMESTAMP(dateResolved, timeResolved))) as averageResolveTime FROM incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE MONTH(dateOccur) = ? AND YEAR(dateOccur) = ? AND status = 'Resolved'";
+  db.query(sql, [month, year], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({
+        success: false,
+        message: "getAvgResolveTime unsuccessful",
+      });
+    } else {
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});
+
+// count no. incidents for each month starting from current month (loop for 12 month)
+app.get("/api/getIncidentsPerMonth", (req, res) => {
+  const year = req.body.year;
+  const sql =
+    "SELECT MONTH(dateOccur) as month, COUNT(*) as incidentCount FROM incidents WHERE YEAR(dateOccur) = ? GROUP BY MONTH(dateOccur)";
+  db.query(sql, [year], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({
+        success: false,
+        message: "getIncidentsPerMonth unsuccessful",
+      });
+    } else {
+      console.log(result);
+      return res.json({ success: true, result });
+    }
+  });
+});
+
+// count no. incidents of each incident type
+app.get("/api/getIncidentsPerType", (req, res) => {
+  console.log("THIS API IS CALLED");
+  const month = req.query.month;
+  const year = req.query.year;
+  const sql =
+    "SELECT incident_type.incidentTypeName, COUNT(*) as incidentCount FROM incidents JOIN incident_type ON incidents.incidentTypeID = incident_type.incidentTypeID WHERE MONTH(dateOccur) = ? AND YEAR(dateOccur) = ? GROUP BY incident_type.incidentTypeName";
+  db.query(sql, [month, year], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.json({
+        success: false,
+        message: "getIncidentsPerType unsuccessful",
+      });
     } else {
       console.log(result);
       return res.json({ success: true, result });

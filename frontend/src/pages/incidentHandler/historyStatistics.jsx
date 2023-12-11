@@ -4,6 +4,7 @@ import IncidentHistory from "../../components/incidentHistory";
 import Axios from "axios";
 import { KJUR } from "jsrsasign";
 import withAuth from "../../components/withAuth";
+import IncidentTypeChart from "../../components/incidentTypeChart";
 
 const HistoryStatistics = () => {
   const [incidents, setIncidents] = useState([]);
@@ -17,7 +18,7 @@ const HistoryStatistics = () => {
   const fetchIncidents = (url) => {
     Axios.get(url)
       .then((response) => {
-        console.log("getIncidents is reached");
+        console.log("getResolvedIncidents is reached");
         setIncidents(response.data.incidents);
         console.log(response.data.incidents);
       })
@@ -25,8 +26,9 @@ const HistoryStatistics = () => {
         console.error("Error fetching incidents:", error);
       });
   };
+
   useEffect(() => {
-    fetchIncidents("http://localhost:8800/api/getIncidents");
+    fetchIncidents("http://localhost:8800/api/getResolvedIncidents");
   }, []);
 
   // NEED TO FILTER THE INCIDENTS TO DISPLAY ONLY RESOLVED INCIDENTS
@@ -59,6 +61,7 @@ const HistoryStatistics = () => {
   return (
     <div>
       <h1>Incident List</h1>
+      <IncidentTypeChart />
 
       <div className="incident-container">
         {incidents &&
