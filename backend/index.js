@@ -225,9 +225,25 @@ app.get("/api/getIncidents", (req, res) => {
   );
 });
 
+app.get("/api/getIncidentHistory", (req, res) => {
+  const userID = req.body.userID;
+  db.query(
+    "SELECT incidents.incidentID,incidents.incidentName,incidents.dateOccur,handler_report.criticalID, criticalities.criticalName AS criticality, incident_report.dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_report ON incidents.incidentID =  incident_report.incidentID WHERE incidents.status='Resolved' AND incident_report.reporterUserID = ?;",
+    [userID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        // console.log(result);
+        return res.json({ incidents: result });
+      }
+    }
+  );
+});
+
 app.get("/api/getResolvedIncidents", (req, res) => {
   db.query(
-    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality, incident_type.incidentTypeName AS incidentTypeName, incident_report.dateResolved as dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status='Resolved';",
+    "SELECT incidents.incidentID,incidents.incidentName,handler_report.handlerReportID, incident_type.incidentTypeName AS incidentTypeName, incident_report.dateResolved as dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status='Resolved';",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -457,6 +473,8 @@ app.get("/api/getIncidentProgress", (req, res) => {
     }
   });
 });
+
+// API to get
 
 // app.use("/api", require("./router.js"));
 // router.route("http://localhost:3000/create").post(create_user);

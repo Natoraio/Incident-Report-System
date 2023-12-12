@@ -11,9 +11,9 @@ const HistoryStatistics = () => {
   const [handlerId, setHandlerId] = useState("");
   const [username, setUsername] = useState("");
 
-  useEffect(() => {
-    fetchIncidents("http://localhost:8800/api/getIncidents");
-  }, []);
+  // useEffect(() => {
+  //   fetchIncidents("http://localhost:8800/api/getIncidents");
+  // }, []);
 
   const fetchIncidents = (url) => {
     Axios.get(url)
