@@ -377,8 +377,8 @@ app.post("/api/submitHandlerReport", (req, res) => {
 
 // count no. incidents that are
 app.get("/api/getIncidentCount", (req, res) => {
-  const year = req.body.year;
-  const month = req.body.month;
+  const year = req.query.year;
+  const month = req.query.month;
   const sql =
     "SELECT COUNT(*) as incidentCount FROM incidents WHERE MONTH(dateOccur) = ? and YEAR(dateOccur) = ?";
   db.query(sql, [month, year], (err, result) => {
@@ -397,8 +397,8 @@ app.get("/api/getIncidentCount", (req, res) => {
 
 // count and calculate avg resolve time
 app.get("/api/getAverageResolveTime", (req, res) => {
-  const month = req.body.month;
-  const year = req.body.year;
+  const month = req.query.month;
+  const year = req.query.year;
   const sql =
     "SELECT AVG(TIMESTAMPDIFF(HOUR, TIMESTAMP(dateOccur, timeOccur), TIMESTAMP(dateResolved, timeResolved))) as averageResolveTime FROM incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE MONTH(dateOccur) = ? AND YEAR(dateOccur) = ? AND status = 'Resolved'";
   db.query(sql, [month, year], (err, result) => {
@@ -417,9 +417,14 @@ app.get("/api/getAverageResolveTime", (req, res) => {
 
 // count no. incidents for each month starting from current month (loop for 12 month)
 app.get("/api/getIncidentsPerMonth", (req, res) => {
-  const year = req.body.year;
-  const sql =
-    "SELECT MONTH(dateOccur) as month, COUNT(*) as incidentCount FROM incidents WHERE YEAR(dateOccur) = ? GROUP BY MONTH(dateOccur)";
+  const year = req.query.year;
+  const sql = `SELECT all_months.month, IFNULL(incident_counts.incidentCount, 0) as incidentCount
+    FROM 
+      (SELECT 1 as month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) as all_months
+    LEFT JOIN
+      (SELECT MONTH(dateOccur) as month, COUNT(*) as incidentCount FROM incidents WHERE YEAR(dateOccur) = ? GROUP BY MONTH(dateOccur)) as incident_counts
+    ON all_months.month = incident_counts.month
+    ORDER BY all_months.month`;
   db.query(sql, [year], (err, result) => {
     if (err) {
       console.error(err);

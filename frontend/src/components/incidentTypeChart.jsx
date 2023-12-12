@@ -7,8 +7,32 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  Label,
 } from "recharts";
 import axios from "axios";
+
+const CustomizedAxisTick = (props) => {
+  const { x, y, payload } = props;
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <text
+        x={0}
+        y={0}
+        textAnchor="end"
+        fill="#666"
+        transform="rotate(-35)"
+        style={{ fontSize: "12px" }}
+      >
+        {payload.value}
+      </text>
+    </g>
+  );
+};
+
+const CustomizedLegend = (props) => {
+  // Return null to render nothing
+  return null;
+};
 
 const IncidentTypeChart = () => {
   const [data, setData] = useState([]);
@@ -31,21 +55,33 @@ const IncidentTypeChart = () => {
 
   return (
     <BarChart
-      width={800}
-      height={400}
+      layout="vertical"
+      width={700}
+      height={350}
       data={data}
       margin={{
         top: 5,
         right: 30,
-        left: 20,
-        bottom: 5,
+        left: 100,
+        bottom: 20,
       }}
     >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="incidentTypeName" />
-      <YAxis />
+      <XAxis type="number">
+        <Label
+          value="Number of Incidents"
+          offset={-15}
+          position="insideBottom"
+        />
+      </XAxis>
+      <YAxis
+        dataKey="incidentTypeName"
+        type="category"
+        tick={<CustomizedAxisTick />}
+      >
+        {/* <Label value="Incident Type" angle={-90} dx={-100} /> */}
+      </YAxis>
       <Tooltip />
-      <Legend />
+      <Legend content={<CustomizedLegend />} />
       <Bar dataKey="incidentCount" fill="#8884d8" />
     </BarChart>
   );
