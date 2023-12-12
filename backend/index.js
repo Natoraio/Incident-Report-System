@@ -443,6 +443,7 @@ app.get("/api/getIncidentsPerType", (req, res) => {
     "SELECT incident_type.incidentTypeName, COUNT(*) as incidentCount FROM incidents JOIN incident_type ON incidents.incidentTypeID = incident_type.incidentTypeID WHERE MONTH(dateOccur) = ? AND YEAR(dateOccur) = ? GROUP BY incident_type.incidentTypeName";
   db.query(sql, [month, year], (err, result) => {
     if (err) {
+      console.log("ERRORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
       console.error(err);
       return res.json({
         success: false,

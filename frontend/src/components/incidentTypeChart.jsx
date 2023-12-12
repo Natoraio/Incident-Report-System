@@ -15,21 +15,24 @@ const IncidentTypeChart = () => {
 
   useEffect(() => {
     axios
-      .get("/api/getIncidentsPerType", { month: "11", year: "2023" }) // replace with your desired month and year
+      .get("http://localhost:8800/api/getIncidentsPerType", {
+        params: {
+          month: "11",
+          year: "2023",
+        }, // replace with your desired month and year
+      })
       .then((response) => {
         if (response.data.success) {
           setData(response.data.result);
-          console.log(response.data);
-          console.log("Success MAYBEEEEEEEEEEEEEEEEEEEEEE");
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("API call failed:", err));
   }, []);
 
   return (
     <BarChart
-      width={500}
-      height={300}
+      width={800}
+      height={400}
       data={data}
       margin={{
         top: 5,
