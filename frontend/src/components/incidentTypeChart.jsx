@@ -34,15 +34,16 @@ const CustomizedLegend = (props) => {
   return null;
 };
 
-const IncidentTypeChart = () => {
+const IncidentTypeChart = ({ selectedMonth }) => {
   const [data, setData] = useState([]);
+  const thisYear = new Date().getFullYear();
 
   useEffect(() => {
     axios
       .get("http://localhost:8800/api/getIncidentsPerType", {
         params: {
-          month: "11",
-          year: "2023",
+          month: selectedMonth,
+          year: thisYear,
         }, // replace with your desired month and year
       })
       .then((response) => {
@@ -51,7 +52,7 @@ const IncidentTypeChart = () => {
         }
       })
       .catch((err) => console.error("API call failed:", err));
-  }, []);
+  }, [selectedMonth]);
 
   return (
     <BarChart

@@ -19,12 +19,13 @@ const CustomizedLegend = (props) => {
 
 const IncidentsPerMonthChart = () => {
   const [data, setData] = useState([]);
+  const thisYear = new Date().getFullYear();
 
   useEffect(() => {
     axios
       .get("http://localhost:8800/api/getIncidentsPerMonth", {
         params: {
-          year: "2023", // replace with your desired year
+          year: thisYear, // replace with your desired year
         },
       })
       .then((response) => {

@@ -28,6 +28,20 @@ const ResponseForm = () => {
     }
   }, []);
 
+  const [imageBase64, setImageBase64] = useState("");
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // When the reader is done reading the file, the result attribute contains the Base64 string
+        setImageBase64(reader.result);
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL (Base64 format)
+    }
+  };
+
   const [media, setMedia] = useState("");
   const [reponseDescription, setResponseDescription] = useState("");
   const [criticalityLevel, setCriticalityLevel] = useState("");
@@ -55,7 +69,7 @@ const ResponseForm = () => {
       actionTaken: actionTaken,
       plannedAction: plannedAction,
       additionalNotes: additionalNotes,
-      media: media,
+      media: imageBase64,
       handlerID: handlerId,
       incidentID: lastPart,
     })
@@ -195,13 +209,14 @@ const ResponseForm = () => {
             onChange={(e) => setAdditionalNotes(e.target.value)}
           />
         </label>
-        <label className="mb-4 flex items-center">
-          <span className="w-40">Upload Media:</span>
+        <label>
+          Media Upload:
           <input
-            type=".png, .jpg, .jpeg, .pdf"
-            value={media}
-            onChange={(e) => setMedia(e.target.value)}
-            className="rounded p-2"
+            id="file"
+            name="image"
+            type="file"
+            accept=".jpg, .jpeg, .png"
+            onChange={handleImageChange}
           />
         </label>
         <button

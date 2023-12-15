@@ -110,11 +110,12 @@ const HistoryStatistics = () => {
 
   return (
     <div>
+      <h1>Incident History and Statistics</h1>
       <p>The number of incidents this month is: {noIncidents}</p>
       <p>The average resolve time this month is: {avgResolveTime}</p>
-      <h1>Incident List</h1>
+
       <IncidentsPerMonthChart />
-      <IncidentTypeChart />
+      <IncidentTypeChart selectedMonth={selectedMonth} />
       <select
         className="p-3 rounded"
         value={selectedMonth}
