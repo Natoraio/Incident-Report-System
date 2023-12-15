@@ -14,6 +14,7 @@ import HandlerMain from "./pages/incidentHandler/handlerMain";
 import IncidentDetails from "./pages/incidentDetails";
 import IncidentHistory from "./pages/facultyMember/incidentHistory";
 import HistoryStatistics from "./pages/incidentHandler/historyStatistics";
+import PDFFile from "./pages/PDFFile";
 
 const router = createBrowserRouter([
   {
@@ -47,10 +48,7 @@ const router = createBrowserRouter([
     path: "/handler-home",
     element: <HandlerMain />,
   },
-  {
-    path: "/incident-details/:id",
-    element: <IncidentDetails />,
-  },
+
   {
     path: "/incident-history/:id",
     element: <IncidentHistory />,
@@ -58,6 +56,14 @@ const router = createBrowserRouter([
   {
     path: "/history-statistics",
     element: <HistoryStatistics />,
+  },
+  {
+    path: "/pdf-file",
+    element: <PDFFile />,
+  },
+  {
+    path: "/incident-details/:id",
+    element: <IncidentDetails />,
   },
 ]);
 
