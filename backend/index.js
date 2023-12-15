@@ -213,23 +213,7 @@ app.post("/api/submitForm", (req, res) => {
 
 app.get("/api/getIncidents", (req, res) => {
   db.query(
-    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incidents.dateOccur,handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID WHERE incidents.status<>'Resolved';",
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        // console.log(result);
-        return res.json({ incidents: result });
-      }
-    }
-  );
-});
-
-app.get("/api/getIncidentHistory", (req, res) => {
-  const userID = req.body.userID;
-  db.query(
-    "SELECT incidents.incidentID,incidents.incidentName,incidents.dateOccur,handler_report.criticalID, criticalities.criticalName AS criticality, incident_report.dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_report ON incidents.incidentID =  incident_report.incidentID WHERE incidents.status='Resolved' AND incident_report.reporterUserID = ?;",
-    [userID],
+    "SELECT incidents.incidentID,incidents.incidentName,incidents.status,incident_report.dateReported, incident_report.timeReported, handler_report.handlerReportID,handler_report.criticalID, criticalities.criticalName AS criticality FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status<>'Resolved';",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -465,11 +449,11 @@ app.get("/api/getIncidentProgress", (req, res) => {
   const userID = req.query.userID;
   console.log("The parsed in ID is" + userID);
   const sql =
-    "SELECT incidents.*, incident_report.*, handler_report.*, criticalities.criticalName AS HandlerCriticality FROM incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID WHERE incident_report.reporterUserID = ?;";
+    "SELECT incidents.incidentID, incidents.incidentName, incident_report.dateReported, incidents.status, handler_report.criticalID, criticalities.criticalName AS HandlerCriticality FROM incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID WHERE incident_report.reporterUserID = ? AND incidents.status <> 'Resolved';";
   db.query(sql, [userID], (err, result) => {
     if (err) {
       console.error(err);
-      return res.json({ success: false, message: "Insert Unsuccessful" });
+      return res.json({ success: false, message: "Select Unsuccessful" });
     } else {
       console.log(result);
       //   db.query("SELECT Criticality FROM handler_report WHERE Report_id = ?", [
@@ -478,6 +462,23 @@ app.get("/api/getIncidentProgress", (req, res) => {
       return res.json({ success: true, result });
     }
   });
+});
+
+app.get("/api/getIncidentHistory", (req, res) => {
+  const userID = req.query.userID;
+  db.query(
+    "SELECT incidents.incidentID,incidents.incidentName,handler_report.criticalID, criticalities.criticalName AS criticality, incident_report.dateResolved, incident_report.dateReported FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_report ON incidents.incidentID =  incident_report.incidentID WHERE incidents.status='Resolved' AND incident_report.reporterUserID = ?;",
+    [userID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.json({ success: false, message: "Select Unsuccessful" });
+      } else {
+        // console.log(result);
+        return res.json({ success: true, result });
+      }
+    }
+  );
 });
 
 // API to get

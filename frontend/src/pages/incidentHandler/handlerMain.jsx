@@ -56,11 +56,17 @@ const HandlerMain = () => {
   }, [handlerId]);
 
   // Handler for sorting by latest date
-  const sortByLatestDate = () => {
+  const sortByLatestDateAndTime = () => {
     setIncidents((prevIncidents) =>
-      [...prevIncidents].sort(
-        (a, b) => new Date(b.dateOccur) - new Date(a.dateOccur)
-      )
+      [...prevIncidents].sort((a, b) => {
+        const dateA = new Date(
+          a.dateReported.split("T")[0] + "T" + a.timeReported
+        );
+        const dateB = new Date(
+          b.dateReported.split("T")[0] + "T" + b.timeReported
+        );
+        return dateB - dateA;
+      })
     );
   };
 
@@ -101,7 +107,10 @@ const HandlerMain = () => {
         </h3>
         <div className="action-buttons ml-10 mt-10">
           <p>Sort incidents by: </p>
-          <button className="p-3 bg-orange-500" onClick={sortByLatestDate}>
+          <button
+            className="p-3 bg-orange-500"
+            onClick={sortByLatestDateAndTime}
+          >
             Latest First
           </button>
           <button
@@ -126,7 +135,7 @@ const HandlerMain = () => {
                 name={incident.incidentName}
                 progress={incident.status}
                 severity={incident.criticality}
-                date={incident.dateOccur.split("T")[0]}
+                date={incident.dateReported.split("T")[0]}
                 handlerID={handlerId}
               />
             ))}

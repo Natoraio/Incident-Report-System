@@ -56,7 +56,7 @@ const ReportProgress = () => {
       </div>
       <div className="action-buttons ml-10 mt-10">
         <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/incident-history"}>Incident History</Link>
+          <Link to={"/incident-history/" + lastPart}>Incident History</Link>
         </button>
       </div>
     </>
