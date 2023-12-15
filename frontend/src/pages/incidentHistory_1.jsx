@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const IncidentHistory = () => {
+const IncidentHistory_1 = () => {
   const [incidentRecords, setIncidentRecords] = useState([]);
 
   useEffect(() => {

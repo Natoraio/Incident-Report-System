@@ -14,7 +14,7 @@ import ResponseForm from "./pages/incidentHandler/responseForm";
 import HandlerMain from "./pages/incidentHandler/handlerMain";
 import IncidentInsights from "./pages/incidentHandler/incidentInsights";
 import IncidentDetails from "./pages/incidentDetails";
-import IncidentHistory from "./pages/incidentHistory";
+import IncidentHistory from "./pages/facultyMember/incidentHistory";
 
 const router = createBrowserRouter([
   {

@@ -1,0 +1,13 @@
+/* Button styles */
+.bg-orange-500 {
+    background-color: #390656;
+    color: white;
+    padding: 13px;
+    border: none;
+    cursor: pointer;
+    margin-left: auto; /* Align button to the right */
+}
+
+.bg-orange-500:hover {
+    background-color: #770c0c;
+}

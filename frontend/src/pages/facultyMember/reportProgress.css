@@ -1,0 +1,51 @@
+/* Button styles */
+.bg-purple-500 {
+    background-color: #770c0c;
+    color: white;
+    padding: 13px;
+    border: none;
+    cursor: pointer;
+}
+
+.bg-purple-500:hover {
+    background-color: #390656;
+}
+.text-content {
+    margin-top: 50px;
+    margin-left: 80px;
+}
+.incident-detail.incident-name {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+
+.labels-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .labels-container div{
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+    border-bottom: 2px solid #390656 ;
+  }
+  .incident-detail {
+    margin-right: 110px;
+  }
+  .mb-4 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  } 
+  .mb-4 div{
+    text-align: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 30px;
+  } 
+  .view-details-button {
+    margin-left: 50px;
+  }

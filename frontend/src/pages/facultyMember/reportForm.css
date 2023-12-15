@@ -1,0 +1,76 @@
+/* Container styles */
+.report-container {
+    max-width: 100%;
+    margin: auto;
+    margin-top: 50px;
+    margin-left: 50px;
+    padding: 20px;
+  }
+  .intro-text {
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+  .details-blah {
+    margin-left: 80px;
+  }
+  /* Form styles */
+  .flex {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .flex h1 {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* Label styles */
+  .flex label {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .flex.input-container {
+    display: flex;
+    align-items: center;
+  }
+  /* Input styles */
+  .flex input,
+  .flex select,
+  .flex textarea {
+    width: 75%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Specific input styles with borders */
+  .flex input[name="incidentName"],
+  .flex select[name="incidentType"],
+  .flex textarea[name="description"],
+  .flex input[name="incidentDate"],
+  .flex input[name="incidentTime"],
+  .flex input[name="incidentLocation"],
+  .flex input[name="userId"],
+  .flex input[name="image"] {
+    border: 1px solid #390656;
+  }
+  
+  /* Button styles */
+  .flex button {
+    background-color: #390656;
+    color: white;
+    padding: 15px;
+    border: none;
+    cursor: pointer;
+    width: 25%;
+    margin-left: auto; /* Align button to the right */
+  }
+  
+  .flex button:hover {
+    background-color: #770c0c;
+  }
+  

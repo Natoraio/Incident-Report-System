@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import IncidentProgress from "../../components/incidentProgress";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
+import "./reportProgress.css"
 
 const ReportProgress = () => {
   const urlPath = window.location.pathname;
@@ -41,22 +42,41 @@ const ReportProgress = () => {
           the individual incident to view more details!
         </h2>
 
-        <div className="incident-container">
+        <div className="incident-container" style={{ marginTop: '40px' }}>
+          <div className="labels-container">
+            <div>Incident Name</div>
+            <div>Progress/Status</div>
+            <div>Criticality Level</div>
+            <div>Report Date</div>
+            <div>View Details</div>
+          </div>
           {incidentList.map((incident, index) => (
-            <IncidentProgress
-              key={index}
-              name={incident.name}
-              progress={incident.progress}
-              severity={incident.severity}
-              date={incident.date}
-              incidentID={incident.incidentID}
-            />
+            <div key={index} className="mb-4"style={{ marginTop: '60px'}}>
+              <div className="incident-detail incident-name" name={incident.name}>
+                {incident.name}
+              </div>
+              <div className="incident-detail" progress={incident.progress}>
+                {incident.progress}
+              </div>
+              <div className="incident-detail" severity={incident.severity}>
+                {incident.severity}
+              </div>
+              <div className="incident-detail" date={incident.date}>
+                {incident.date}
+              </div>
+              <div className="view-details-button">
+                <button className="p-5 bg-purple-500">
+                  <Link to={`/incident-details/${incident.incidentID}`} style={{ color: 'white' }}>View Details</Link>
+                </button>
+              </div>
+            </div>
           ))}
         </div>
+
       </div>
-      <div className="action-buttons ml-10 mt-10">
-        <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/incident-history"}>Incident History</Link>
+      <div className="action-buttons ml-10 mt-10 mb-3">
+        <button className="p-5 bg-orange-500 ml-50" style={{ display: 'block', margin: '0 auto', marginLeft: '50%', transform: 'translateX(-50%)' }}>
+          <Link to={"/incident-history"} style={{ color: 'white' }}>Incident History</Link>
         </button>
       </div>
     </>

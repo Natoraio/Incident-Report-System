@@ -348,7 +348,21 @@ app.get("/api/getMonthlySummary", (req, res) => {
     }
   });
 });
-
+app.get("/api/getIncidentHistory", (req, res) => {
+  const userID = req.body.userID;
+  db.query(
+    "SELECT incidents.incidentID,incidents.incidentName,incidents.dateOccur,handler_report.criticalID, criticalities.criticalName AS criticality, incident_report.dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_report ON incidents.incidentID =  incident_report.incidentID WHERE incidents.status='Resolved' AND incident_report.reporterUserID = ?;",
+    [userID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        //console.log(result);
+        return res.json({ incidents: result });
+      }
+    }
+  );
+});
 app.get("/api/getIncidentProgress", (req, res) => {
   const userID = req.query.userID;
   console.log("The parsed in ID is" + userID);
