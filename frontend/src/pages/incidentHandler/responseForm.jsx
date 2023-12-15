@@ -90,6 +90,7 @@ const ResponseForm = () => {
     <div className="container mx-auto flex">
       <div className="w-1/2">
         <h1 className="text-2xl font-bold mb-4">Incident Response Form</h1>
+        <h2>To report a new incident into the system, please fill in all the fields. Image file upload is optional, but is very helpful!</h2>
         <form onSubmit={handleSubmit} className="flex flex-col">
           <label className="mb-4 flex items-center">
             <span className="w-40">Response Description:</span>

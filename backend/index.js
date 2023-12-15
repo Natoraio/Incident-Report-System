@@ -391,3 +391,4 @@ app.post("/api/resolveIncident", (req, res) => {
     }
   });
 });
+

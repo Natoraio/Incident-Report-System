@@ -6,6 +6,83 @@ import styled, {createGlobalStyle} from "styled-components";
 import loginBG from "./loginBG.jpg";
 import logo from "./logo-siit.png";
 
+const GlobalStyle = createGlobalStyle`
+* { 
+margin: 0;
+padding: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  widhth: 100vw;
+  background-image: url(${loginBG});
+  background-size: cover;
+  font-family: 'Inter', sans-serif; /* Change the font family as needed */
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+`;
+
+const LoginContainer = styled.div`
+height: 70vh;
+width: 30vw;
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding: 2rem;
+border-radius: 1rem;
+color:black;
+background-color: rgba(255, 255, 255, 0.8);
+`;
+
+const Input = styled.input`
+background-color: #ffffff;
+padding: 1rem;
+border: 1px solid #ced4da;
+border-radius: 10px;
+margin-top: 1rem;
+`;
+
+const Select = styled.select`
+width: 100%;
+background-color: #ffffff;
+padding: 1rem;
+border: 1px solid #ced4da;
+border-radius: 10px;
+margin-top: 0.5rem;
+`;
+
+const Button = styled.button`
+width: 100%;
+margin-top: 1rem;
+padding: 1rem;
+border-radius: 10px;
+background-color: #6f2da8;
+color: white;
+border: none;
+cursor: pointer;
+&:hover {
+  color: white;
+  background-color: black;
+}
+`;
+
+const Logo = styled.img`
+width: 300px; // Adjust the width as needed
+height: auto; // Maintain aspect ratio
+margin-bottom: 20px; // Add some space below the logo
+`;
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -64,81 +141,7 @@ const Login = () => {
       });
   };
 
-  const GlobalStyle = createGlobalStyle`
-  * { 
-  margin: 0;
-  padding: 0;
-  }
 
-  body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    widhth: 100vw;
-    background-image: url(${loginBG});
-    background-size: cover;
-    font-family: 'Inter', sans-serif; /* Change the font family as needed */
-  }
-
-  #root {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-`;
-
-const LoginContainer = styled.div`
-  height: 70vh;
-  width: 30vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  border-radius: 1rem;
-  color:black;
-  background-color: rgba(255, 255, 255, 0.8);
-`;
-
-const Input = styled.input`
-  background-color: #ffffff;
-  padding: 1rem;
-  border: 1px solid #ced4da;
-  border-radius: 10px;
-  margin-top: 1rem;
-`;
-
-const Select = styled.select`
-  width: 100%;
-  background-color: #ffffff;
-  padding: 1rem;
-  border: 1px solid #ced4da;
-  border-radius: 10px;
-  margin-top: 0.5rem;
-`;
-
-const Button = styled.button`
-  width: 100%;
-  margin-top: 1rem;
-  padding: 1rem;
-  border-radius: 10px;
-  background-color: #6f2da8;
-  color: white;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    color: white;
-    background-color: black;
-  }
-`;
-
-const Logo = styled.img`
-  width: 300px; // Adjust the width as needed
-  height: auto; // Maintain aspect ratio
-  margin-bottom: 10px; // Add some space below the logo
-`;
 
 return (
   <>
