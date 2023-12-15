@@ -4,6 +4,7 @@ import { KJUR } from "jsrsasign";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import withAuth from "../../components/withAuth";
+import { Link } from "react-router-dom";
 
 const ReportForm = () => {
   const [incidentName, setIncidentName] = useState("");

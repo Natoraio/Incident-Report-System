@@ -18,6 +18,8 @@ const HistoryStatistics = () => {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
 
+  const navigate = useNavigate();
+
   // const currentMonth = new Date().getMonth() + 1;
 
   // useEffect(() => {
@@ -162,4 +164,4 @@ const HistoryStatistics = () => {
   );
 };
 
-export default HistoryStatistics;
+export default withAuth(HistoryStatistics, "Incident handler");

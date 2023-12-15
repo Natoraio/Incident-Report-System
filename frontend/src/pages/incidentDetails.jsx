@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import Swal from "sweetalert2";
 import { KJUR } from "jsrsasign";
+import withAuth from "../components/withAuth";
 
 const IncidentDetails = () => {
   const urlPath = window.location.pathname;
@@ -274,4 +275,4 @@ const IncidentDetails = () => {
   );
 };
 
-export default IncidentDetails;
+export default withAuth(IncidentDetails, "StaffAndHandler");

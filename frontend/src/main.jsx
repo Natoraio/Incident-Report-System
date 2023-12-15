@@ -9,10 +9,8 @@ import Login from "./pages/login";
 import ReportForm from "./pages/facultyMember/reportForm";
 import { Navigate } from "react-router-dom";
 import ReportProgress from "./pages/facultyMember/reportProgress";
-import ReportSummary from "./pages/facultyMember/reportSummary";
 import ResponseForm from "./pages/incidentHandler/responseForm";
 import HandlerMain from "./pages/incidentHandler/handlerMain";
-import IncidentInsights from "./pages/incidentHandler/incidentInsights";
 import IncidentDetails from "./pages/incidentDetails";
 import IncidentHistory from "./pages/facultyMember/incidentHistory";
 import HistoryStatistics from "./pages/incidentHandler/historyStatistics";
@@ -40,10 +38,6 @@ const router = createBrowserRouter([
     path: "/incident-progress/:id",
     element: <ReportProgress />,
   },
-  {
-    path: "/report-summary",
-    element: <ReportSummary />,
-  },
 
   {
     path: "/response-form/:id",
@@ -52,10 +46,6 @@ const router = createBrowserRouter([
   {
     path: "/handler-home",
     element: <HandlerMain />,
-  },
-  {
-    path: "/incident-insights",
-    element: <IncidentInsights />,
   },
   {
     path: "/incident-details/:id",
