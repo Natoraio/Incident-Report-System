@@ -34,6 +34,9 @@ const ReportProgress = () => {
 
   return (
     <>
+      <button>
+        <Link to="/home">Back to home</Link>
+      </button>
       <div className="text-content ml-10">
         <h1>Incident Tracking</h1>
         <h2 className="mt-5">

@@ -110,6 +110,9 @@ const HistoryStatistics = () => {
 
   return (
     <div>
+      <button>
+        <Link to="/handler-home">Back to home</Link>
+      </button>
       <h1>Incident History and Statistics</h1>
       <p>The number of incidents this month is: {noIncidents}</p>
       <p>The average resolve time this month is: {avgResolveTime}</p>

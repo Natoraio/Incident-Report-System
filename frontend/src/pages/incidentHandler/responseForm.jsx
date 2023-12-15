@@ -101,133 +101,138 @@ const ResponseForm = () => {
   };
 
   return (
-    <div className="container mx-auto flex">
-      <div className="w-1/2">
-        <h1 className="text-2xl font-bold mb-4">Incident Response Form</h1>
-        <form onSubmit={handleSubmit} className="flex flex-col">
+    <>
+      <button>
+        <Link to="/home">Back to home</Link>
+      </button>
+      <div className="container mx-auto flex">
+        <div className="w-1/2">
+          <h1 className="text-2xl font-bold mb-4">Incident Response Form</h1>
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <label className="mb-4 flex items-center">
+              <span className="w-40">Response Description:</span>
+              <textarea
+                className="rounded w-96 p-2"
+                value={reponseDescription}
+                onChange={(e) => setResponseDescription(e.target.value)}
+              />
+            </label>
+            <label className="mb-4 flex items-center">
+              <span className="w-40">Criticality Level:</span>
+              <select
+                className="p-2 rounded"
+                value={criticalityLevel}
+                onChange={(e) => setCriticalityLevel(e.target.value)}
+              >
+                <option value="4">Select Criticality</option>
+                <option value="3">Low</option>
+                <option value="2">Medium</option>
+                <option value="1">High</option>
+              </select>
+            </label>
+            <label className="mb-4 flex items-center">
+              <span className="w-40">Affected Hosts:</span>
+              <input
+                type="text"
+                value={affectedHosts}
+                onChange={(e) => setAffectedHosts(e.target.value)}
+                className="rounded p-2"
+              />
+            </label>
+            <label className="mb-4 flex items-center">
+              <span className="w-40">IP Address:</span>
+              <input
+                type="text"
+                value={IPAddress}
+                onChange={(e) => setIPAddress(e.target.value)}
+                className="rounded p-2"
+              />
+            </label>
+            <label className="mb-4 flex items-center">
+              <span className="w-40">Source IP:</span>
+              <input
+                type="text"
+                value={sourceIP}
+                onChange={(e) => setSourceIP(e.target.value)}
+                className="rounded p-2"
+              />
+            </label>
+            <label className="mb-4 flex items-center">
+              <span className="w-40">Communication Host:</span>
+              <input
+                type="text"
+                value={comHost}
+                onChange={(e) => setComHost(e.target.value)}
+                className="rounded p-2"
+              />
+            </label>
+            <label className="mb-4 flex items-center">
+              <span className="w-40">Other Application:</span>
+              <input
+                type="text"
+                value={otherApp}
+                onChange={(e) => setOtherApp(e.target.value)}
+                className="rounded p-2"
+              />
+            </label>
+          </form>
+        </div>
+        <div className="w-1/2">
           <label className="mb-4 flex items-center">
-            <span className="w-40">Response Description:</span>
+            <span className="w-40">Impact Assessment:</span>
+            <input
+              type="text"
+              value={impactAssessment}
+              onChange={(e) => setImpactAssessment(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Action Taken:</span>
+            <input
+              type="text"
+              value={actionTaken}
+              onChange={(e) => setActionTaken(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Planned Action:</span>
+            <input
+              type="text"
+              value={plannedAction}
+              onChange={(e) => setPlannedAction(e.target.value)}
+              className="rounded p-2"
+            />
+          </label>
+          <label className="mb-4 flex items-center">
+            <span className="w-40">Additional Notes:</span>
             <textarea
               className="rounded w-96 p-2"
-              value={reponseDescription}
-              onChange={(e) => setResponseDescription(e.target.value)}
+              value={additionalNotes}
+              onChange={(e) => setAdditionalNotes(e.target.value)}
             />
           </label>
-          <label className="mb-4 flex items-center">
-            <span className="w-40">Criticality Level:</span>
-            <select
-              className="p-2 rounded"
-              value={criticalityLevel}
-              onChange={(e) => setCriticalityLevel(e.target.value)}
-            >
-              <option value="4">Select Criticality</option>
-              <option value="3">Low</option>
-              <option value="2">Medium</option>
-              <option value="1">High</option>
-            </select>
-          </label>
-          <label className="mb-4 flex items-center">
-            <span className="w-40">Affected Hosts:</span>
+          <label>
+            Media Upload:
             <input
-              type="text"
-              value={affectedHosts}
-              onChange={(e) => setAffectedHosts(e.target.value)}
-              className="rounded p-2"
+              id="file"
+              name="image"
+              type="file"
+              accept=".jpg, .jpeg, .png"
+              onChange={handleImageChange}
             />
           </label>
-          <label className="mb-4 flex items-center">
-            <span className="w-40">IP Address:</span>
-            <input
-              type="text"
-              value={IPAddress}
-              onChange={(e) => setIPAddress(e.target.value)}
-              className="rounded p-2"
-            />
-          </label>
-          <label className="mb-4 flex items-center">
-            <span className="w-40">Source IP:</span>
-            <input
-              type="text"
-              value={sourceIP}
-              onChange={(e) => setSourceIP(e.target.value)}
-              className="rounded p-2"
-            />
-          </label>
-          <label className="mb-4 flex items-center">
-            <span className="w-40">Communication Host:</span>
-            <input
-              type="text"
-              value={comHost}
-              onChange={(e) => setComHost(e.target.value)}
-              className="rounded p-2"
-            />
-          </label>
-          <label className="mb-4 flex items-center">
-            <span className="w-40">Other Application:</span>
-            <input
-              type="text"
-              value={otherApp}
-              onChange={(e) => setOtherApp(e.target.value)}
-              className="rounded p-2"
-            />
-          </label>
-        </form>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Submit
+          </button>
+        </div>
       </div>
-      <div className="w-1/2">
-        <label className="mb-4 flex items-center">
-          <span className="w-40">Impact Assessment:</span>
-          <input
-            type="text"
-            value={impactAssessment}
-            onChange={(e) => setImpactAssessment(e.target.value)}
-            className="rounded p-2"
-          />
-        </label>
-        <label className="mb-4 flex items-center">
-          <span className="w-40">Action Taken:</span>
-          <input
-            type="text"
-            value={actionTaken}
-            onChange={(e) => setActionTaken(e.target.value)}
-            className="rounded p-2"
-          />
-        </label>
-        <label className="mb-4 flex items-center">
-          <span className="w-40">Planned Action:</span>
-          <input
-            type="text"
-            value={plannedAction}
-            onChange={(e) => setPlannedAction(e.target.value)}
-            className="rounded p-2"
-          />
-        </label>
-        <label className="mb-4 flex items-center">
-          <span className="w-40">Additional Notes:</span>
-          <textarea
-            className="rounded w-96 p-2"
-            value={additionalNotes}
-            onChange={(e) => setAdditionalNotes(e.target.value)}
-          />
-        </label>
-        <label>
-          Media Upload:
-          <input
-            id="file"
-            name="image"
-            type="file"
-            accept=".jpg, .jpeg, .png"
-            onChange={handleImageChange}
-          />
-        </label>
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Submit
-        </button>
-      </div>
-    </div>
+    </>
   );
 };
 

@@ -113,6 +113,9 @@ const ReportForm = () => {
 
   return (
     <div>
+      <button>
+        <Link to="/home">Back to home</Link>
+      </button>
       <h1>Incident Report Form</h1>
       <form onSubmit={handleSubmit} className="flex flex-col">
         <label>

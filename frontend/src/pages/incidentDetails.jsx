@@ -136,6 +136,17 @@ const IncidentDetails = () => {
 
   return (
     <div className="p-4 ml-20">
+      {isHandler && (
+        <button>
+          <Link to="/handler-home">Back to home</Link>
+        </button>
+      )}
+      {!isHandler && (
+        <button>
+          <Link to="/home">Back to home</Link>
+        </button>
+      )}
+
       <p>Incident Details Page</p>
       <h1 className="mb-4 mb-10">Incident name: {incidentName}</h1>
       <p>Issued date: {dateReported}</p>
