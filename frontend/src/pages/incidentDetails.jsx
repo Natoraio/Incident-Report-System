@@ -40,51 +40,17 @@ const IncidentDetails = () => {
   const [plannedAction, setPlannedAction] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [handlerID, setHandlerID] = useState("");
-  const [handlerMedia, setHandlerMedia] = useState("");
 
-  // Identification / Verification
-  const [userId, setUserId] = useState("");
-  const [isHandler, setIsHandler] = useState(false);
-
-  // const handleSubmit = () => {
-  //   Axios.get("api/getIncidentDetails", {
-  //     params: { ReportID: lastPart },
-  //   }).then((response) => {
-  //     console.log(response.data.incidentDetails);
-  //     console.log("IF YOU LVOE ME LET ME GOOOOOOOOOOOOOOOOOOOOOO");
-  //   });
-  // };
-
-  const ResolveIndicent = () => {
-    console.log("Incident resolved");
-    Axios.post("http://localhost:8800/api/resolveIncident", {
-      incidentID: lastPart,
-      handlerID: handlerID,
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.data.success) {
-          console.log("Incident resolved");
-          Swal.fire({
-            title: "Success!",
-            text: "Incident resolved!",
-            icon: "success",
-            confirmButtonText: "OK",
-          }).then(() => {
-            window.location = "/handler-home"; // Redirect to '/handler-home'
-          });
-        }
-      })
-      .catch((error) => {
-        console.error("Axios Error:", error.response);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to resolve incident",
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      });
+  const handleSubmit = () => {
+    Axios.get("api/getIncidentDetails", {
+      params: { ReportID: lastPart },
+    }).then((response) => {
+      console.log(response.data.incidentDetails);
+    });
   };
+
+  useEffect(() => {});
+
   useEffect(() => {
     Axios.get("http://localhost:8800/api/getIncidentDetails", {
       params: {
@@ -122,26 +88,7 @@ const IncidentDetails = () => {
       setPlannedAction(response.data.result[0].plannedAction);
       setAdditionalNotes(response.data.result[0].additionalNote);
       setHandlerID(response.data.result[0].handlerID);
-      setHandlerMedia(response.data.result[0].handlerPicture);
     });
-  }, []);
-
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      const decodedToken = KJUR.jws.JWS.parse(token);
-      const userType = decodedToken.payloadObj.userType;
-      setIsHandler(userType === "Incident handler");
-    }
-  }, []);
-
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      const decodedToken = KJUR.jws.JWS.parse(token);
-      const userType = decodedToken.payloadObj.userType;
-      setIsHandler(userType === "Incident handler");
-    }
   }, []);
 
   const handleClick = () => {
@@ -150,7 +97,35 @@ const IncidentDetails = () => {
     console.log(id);
   };
 
- 
+  const ResolveIndicent = () => {
+    console.log("Incident resolved");
+    Axios.post("http://localhost:8800/api/resolveIncident", {
+      incidentID: id,
+      handlerID: handlerID,
+    })
+      .then((response) => {
+        console.log(response);
+        if (response.data.success) {
+          console.log("Incident resolved");
+          Swal.fire({
+            title: "Success!",
+            text: "Incident resolved!",
+            icon: "success",
+            confirmButtonText: "OK",
+          });
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.error("Axios Error:", error.response);
+        Swal.fire({
+          title: "Error!",
+          text: "Failed to resolve incident",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      });
+  };
   // Fetch incident details from API or props
 
   const GlobalStyle = createGlobalStyle`
@@ -196,18 +171,7 @@ const IncidentDetails = () => {
 
   return (
     <div className="p-4 ml-20">
-      {isHandler && (
-        <button>
-          <Link to="/handler-home">Back to home</Link>
-        </button>
-      )}
-      {!isHandler && (
-        <button>
-          <Link to="/home">Back to home</Link>
-        </button>
-      )}
-
-<h1>Incident Details Page</h1>
+      <h1>Incident Details Page</h1>
       <h2 className="text-2xl font-bold mb-3 text-black-200">
         Incident name: {incidentName}
       </h2>
@@ -308,33 +272,34 @@ const IncidentDetails = () => {
             <span className="font-bold">Handler ID:</span>
             <span className="font-normal ml-2">{handlerID}</span>
           </p>
-          <div className="incident-image">
-            <img src={handlerMedia} alt="Photo of incident" />
-          </div>
         </div>
       </div>
-      {/* <form onSubmit={handleSubmit}> */}
-      {isHandler && (
-        <>
-          <button
-            type="submit"
-            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-          >
-            <Link to={"/response-form/" + lastPart}>
-              Complete Response Form
-            </Link>
-          </button>
-          <button
-            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-            onClick={ResolveIndicent}
-          >
-            Mark as Resolved
-          </button>
-        </>
-      )}
+
+      <div className="mt-4">
+        <Link
+          to={"/response-form/" + lastPart}
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mr-2"
+        >
+          Complete Response Form
+        </Link>
+        <button
+          className="incident-tab p-3 bg-orange-500 ml-2"
+          onClick={ResolveIndicent}
+        >
+          Mark as Resolved
+        </button>
+        <PDFDownloadLink document={<PDFFile />} fileName="incident_summary.pdf">
+          {({ blob, url, loading, error }) =>
+            loading ? (
+              <button>Loading Document..</button>
+            ) : (
+              <button>Save as PDF</button>
+            )
+          }
+        </PDFDownloadLink>
+      </div>
     </div>
-    
   );
 };
 
-export default withAuth(IncidentDetails, "StaffAndHandler");
+export default IncidentDetails;

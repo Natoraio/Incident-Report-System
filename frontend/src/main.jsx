@@ -61,6 +61,10 @@ const router = createBrowserRouter([
     path: "/pdf-file",
     element: <PDFFile />,
   },
+  {
+    path: "/incident-details/:id",
+    element: <IncidentDetails />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

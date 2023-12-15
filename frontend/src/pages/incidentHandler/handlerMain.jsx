@@ -128,20 +128,20 @@ const HandlerMain = () => {
   `;
 
   const StyledButton = styled.button`
-  padding: 3px;
-  margin-left: 1rem;
-  background-color: #ffffff;
+    padding: 3px;
+    margin-left: 1rem;
+    background-color: #ffffff;
 
-  &:hover,
-  &:focus {
-    background-color: #d9d9d9;
-    cursor: pointer;
-  }
+    &:hover,
+    &:focus {
+      background-color: #d9d9d9;
+      cursor: pointer;
+    }
 
-  &:focus {
-    outline: none;
-  }
-`;
+    &:focus {
+      outline: none;
+    }
+  `;
 
   const StyledLink = styled(Link)`
     text-decoration: none;
@@ -183,7 +183,7 @@ const HandlerMain = () => {
 
   return (
     <>
-    <button className="p-3 m-2" onClick={handleLogout}>
+      <button className="p-3 m-2" onClick={handleLogout}>
         Log out
       </button>
       <button className="p-3 bg-blue-500 ml-2">
@@ -198,7 +198,9 @@ const HandlerMain = () => {
         </h3>
         <ActionButtons>
           <p>Sort incidents by: </p>
-          <StyledButton onClick={sortByLatestDate}>Latest First</StyledButton>
+          <StyledButton onClick={sortByLatestDateAndTime}>
+            Latest First
+          </StyledButton>
           <StyledButton onClick={sortByCriticalityLowToHigh}>
             Criticality: Lowest First
           </StyledButton>

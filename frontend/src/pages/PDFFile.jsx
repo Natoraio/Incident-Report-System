@@ -10,7 +10,6 @@ import {
 import logo from "./logo-siit.png";
 import IncidentDetails from "./incidentDetails";
 import Axios from "axios";
-import styled from "styled-components";
 
 const styles = StyleSheet.create({
   body: {
@@ -56,7 +55,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     marginHorizontal: 15,
   },
-    labelText: {
+  labelText: {
     textAlign: "center",
     marginTop: 5,
     fontSize: 12,
@@ -139,14 +138,13 @@ const PDFFile = () => {
     });
   };
 
-  useEffect(() => {});
-
   useEffect(() => {
     Axios.get("http://localhost:8800/api/getIncidentDetails", {
       params: {
         incidentID: lastPart,
       },
     }).then((response) => {
+      console.log("THIS CODEW IS REACHEDS");
       console.log(response.data.result[0]);
       setDateReported(response.data.result[0].dateReported.split("T")[0]);
       setTimeReported(response.data.result[0].timeReported);
@@ -244,7 +242,13 @@ const PDFFile = () => {
               {"\n"}
               Reporter's ID: {userInfo}
             </Text>
-            <Image style={styles.image} src={media} alt="Reported Incident Photo" />
+            {media && (
+              <Image
+                style={styles.image}
+                src={media}
+                alt="Reported Incident Photo"
+              />
+            )}
             <Text style={styles.labelText}>Reported Incident Photo</Text>
           </View>
         </View>
