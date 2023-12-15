@@ -34,6 +34,9 @@ const ReportProgress = () => {
 
   return (
     <>
+      <button>
+        <Link to="/home">Back to home</Link>
+      </button>
       <div className="text-content ml-10">
         <h1>Incident Tracking</h1>
         <h2 className="mt-5">
@@ -56,7 +59,7 @@ const ReportProgress = () => {
       </div>
       <div className="action-buttons ml-10 mt-10">
         <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/incident-history"}>Incident History</Link>
+          <Link to={"/incident-history/" + lastPart}>Incident History</Link>
         </button>
       </div>
     </>

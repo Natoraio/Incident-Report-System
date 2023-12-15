@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import IncidentList from "../../components/incidentList";
 import Axios from "axios";
 import { KJUR } from "jsrsasign";
@@ -11,8 +11,9 @@ const HandlerMain = () => {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [incidents, setIncidents] = useState([]);
-  const [navigate, setNavigate] = useState(false);
   const [naviateLogin, setNaviateLogin] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchIncidents("http://localhost:8800/api/getIncidents");
@@ -56,11 +57,17 @@ const HandlerMain = () => {
   }, [handlerId]);
 
   // Handler for sorting by latest date
-  const sortByLatestDate = () => {
+  const sortByLatestDateAndTime = () => {
     setIncidents((prevIncidents) =>
-      [...prevIncidents].sort(
-        (a, b) => new Date(b.dateOccur) - new Date(a.dateOccur)
-      )
+      [...prevIncidents].sort((a, b) => {
+        const dateA = new Date(
+          a.dateReported.split("T")[0] + "T" + a.timeReported
+        );
+        const dateB = new Date(
+          b.dateReported.split("T")[0] + "T" + b.timeReported
+        );
+        return dateB - dateA;
+      })
     );
   };
 
@@ -77,7 +84,12 @@ const HandlerMain = () => {
       [...prevIncidents].sort((a, b) => a.criticalID - b.criticalID)
     );
   };
-
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      sessionStorage.removeItem("token");
+      navigate("/login");
+    }
+  };
   const GlobalStyle = createGlobalStyle`
   * { 
   margin: 0;
@@ -171,9 +183,15 @@ const HandlerMain = () => {
 
   return (
     <>
+    <button className="p-3 m-2" onClick={handleLogout}>
+        Log out
+      </button>
+      <button className="p-3 bg-blue-500 ml-2">
+        <Link to={"/history-statistics"}>View History and Statistics</Link>
+      </button>
       <GlobalStyle />
       <Content>
-        <h1>Welcome Back, {name}!</h1>
+        <h1>Welcome Back! {name}</h1>
         <h2 className="mt-5">To SIIT Cyber Incident Report Database System</h2>
         <h3 className="mt-5">
           Click on an incident or select what action you want to complete today.
@@ -206,7 +224,7 @@ const HandlerMain = () => {
                 <span>{incident.incidentName}</span>
                 <span>{incident.status}</span>
                 <span>{incident.criticality}</span>
-                <span>{incident.dateOccur.split("T")[0]}</span>
+                <span>{incident.dateReported.split("T")[0]}</span>
               </IncidentSeparator>
             </StyledIncident>
           </StyledLink>
