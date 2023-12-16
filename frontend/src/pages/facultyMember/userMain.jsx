@@ -40,9 +40,17 @@ const UserMain = () => {
     }
   }, [userId]);
 
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      sessionStorage.removeItem("token");
+      navigate("/login");
+    }
+  };
+
   return (
     <>
-      <div className="text-content ml-20">
+      <button onClick={handleLogout}>Log out</button>
+      <div className="text-content ml-10">
         <h1>Welcome back, {name}!</h1>
         <h2 className="mt-5">To SIIT Cyber Incident Report Database System</h2>
         <h3 className="mt-1">Select what action you want to complete today.</h3>

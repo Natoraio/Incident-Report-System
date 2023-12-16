@@ -4,6 +4,7 @@ import { KJUR } from "jsrsasign";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import withAuth from "../../components/withAuth";
+import { Link } from "react-router-dom";
 import './reportForm.css';
 
 const ReportForm = () => {
@@ -113,6 +114,10 @@ const ReportForm = () => {
   };
 
   return (
+    <>
+    <button>
+        <Link to="/home">Back to home</Link>
+      </button>
     <div className="report-container">
       <h1>Incident Report Form</h1>
       <p className="intro-text">To report a new incident into the system, please fill in all the fields. Image file upload is optional, but is very helpful!</p>
@@ -229,6 +234,7 @@ const ReportForm = () => {
         </form>
         </div>
     </div>
+    </>
   );
 };
 

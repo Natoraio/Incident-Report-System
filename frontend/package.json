@@ -10,17 +10,23 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^3.1.14",
     "axios": "^1.6.2",
+    "chart.js": "^4.4.1",
     "file-saver": "^2.0.5",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",
     "jsrsasign": "^10.8.6",
     "jwt-decode": "^4.0.0",
+    "pdf-lib": "^1.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
+    "recharts": "^2.10.3",
+    "styled-components": "^6.1.1",
     "react-to-pdf": "^1.0.1",
-    "sweetalert2": "^11.10.1"
+    "sweetalert2": "^11.10.1",
+    "vit": "^0.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

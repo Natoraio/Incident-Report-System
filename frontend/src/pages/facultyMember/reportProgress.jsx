@@ -35,6 +35,9 @@ const ReportProgress = () => {
 
   return (
     <>
+      <button>
+        <Link to="/home">Back to home</Link>
+      </button>
       <div className="text-content ml-10">
         <h1>Incident Tracking</h1>
         <h2 className="mt-5">
@@ -76,7 +79,7 @@ const ReportProgress = () => {
       </div>
       <div className="action-buttons ml-10 mt-10 mb-3">
         <button className="p-5 bg-orange-500 ml-50" style={{ display: 'block', margin: '0 auto', marginLeft: '50%', transform: 'translateX(-50%)' }}>
-          <Link to={"/incident-history"} style={{ color: 'white' }}>Incident History</Link>
+          <Link to={"/incident-history/" + lastPart} style={{ color: 'white' }}>Incident History</Link>
         </button>
       </div>
     </>

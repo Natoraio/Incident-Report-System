@@ -6,6 +6,7 @@ const withAuth = (WrappedComponent, expectedRole) => {
   return (props) => {
     const [isHandler, setIsHandler] = useState(false);
     const [isStaff, setIsStaff] = useState(false);
+    const [isBoth, setIsBoth] = useState(false);
     const [correctRole, setCorrectRole] = useState(false); // ["Incident handler", "Staff"
     const [navigateLogin, setNavigateLogin] = useState(false);
 
@@ -23,6 +24,9 @@ const withAuth = (WrappedComponent, expectedRole) => {
           } else if (expectedRole == "Staff") {
             console.log("Im here 2");
             setIsStaff(true);
+          } else if (expectedRole == "StaffAndHandler") {
+            console.log("Im here BOTH ROLES");
+            setIsBoth(true);
           }
         } else {
           setCorrectRole(true);
