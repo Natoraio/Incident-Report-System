@@ -58,47 +58,51 @@ const ResponseForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:8800/api/submitHandlerReport", {
-      responseDescription: reponseDescription,
-      criticalityLevel: criticalityLevel,
-      affectedHosts: affectedHosts,
-      IPAddress: IPAddress,
-      sourceIP: sourceIP,
-      comHost: comHost,
-      otherApp: otherApp,
-      impactAssessment: impactAssessment,
-      actionTaken: actionTaken,
-      plannedAction: plannedAction,
-      additionalNotes: additionalNotes,
-      media: imageBase64,
-      handlerID: handlerId,
-      incidentID: lastPart,
-    })
-      .then((response) => {
-        // Handle success response
-        console.log(response.data);
-        if (response.data.success) {
-          Swal.fire({
-            title: "Success!",
-            text: "Report submitted successfully!",
-            icon: "success",
-            confirmButtonText: "OK",
-          });
-          navigate("/handler-home");
-        } else {
-          Swal.fire({
-            title: "Error!",
-            text: "Failed to submit report",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-        }
+    if (criticalityLevel === "4" || criticalityLevel === "") {
+      Swal.fire("Error!", "Please select a criticality level.", "error");
+    } else {
+      Axios.post("http://localhost:8800/api/submitHandlerReport", {
+        responseDescription: reponseDescription,
+        criticalityLevel: criticalityLevel,
+        affectedHosts: affectedHosts,
+        IPAddress: IPAddress,
+        sourceIP: sourceIP,
+        comHost: comHost,
+        otherApp: otherApp,
+        impactAssessment: impactAssessment,
+        actionTaken: actionTaken,
+        plannedAction: plannedAction,
+        additionalNotes: additionalNotes,
+        media: imageBase64,
+        handlerID: handlerId,
+        incidentID: lastPart,
       })
-      .catch((error) => {
-        // Handle error response
-        console.error(error);
-        Swal.fire("Error", "Failed to submit report", "error");
-      });
+        .then((response) => {
+          // Handle success response
+          console.log(response.data);
+          if (response.data.success) {
+            Swal.fire({
+              title: "Success!",
+              text: "Report submitted successfully!",
+              icon: "success",
+              confirmButtonText: "OK",
+            });
+            navigate("/handler-home");
+          } else {
+            Swal.fire({
+              title: "Error!",
+              text: "Failed to submit report",
+              icon: "error",
+              confirmButtonText: "OK",
+            });
+          }
+        })
+        .catch((error) => {
+          // Handle error response
+          console.error(error);
+          Swal.fire("Error", "Failed to submit report", "error");
+        });
+    }
   };
 
   return (

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import IncidentListHistory from "../../components/incidentListHistory";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
-import "./incidentHistory.css"
+import "./incidentHistory.css";
 
 const IncidentHistory = () => {
   const urlPath = window.location.pathname;
@@ -19,7 +19,7 @@ const IncidentHistory = () => {
     })
       .then((response) => {
         console.log(response);
-        const incidents = response.data.result.map((item) => ({
+        const incidents = response.data.incidents.map((item) => ({
           name: item.incidentName,
           criticality: item.criticality,
           reportedDate: item.dateReported.split("T")[0],
@@ -45,8 +45,8 @@ const IncidentHistory = () => {
           view more details
         </h2>
 
-        <div className="incident-container" style={{ marginTop: '40px' }}>
-        <div className="labels-container">
+        <div className="incident-container" style={{ marginTop: "40px" }}>
+          <div className="labels-container">
             <div>Incident Name</div>
             <div>Criticality Level</div>
             <div>Occured Date</div>

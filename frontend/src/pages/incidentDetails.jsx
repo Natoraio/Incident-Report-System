@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import styled, { createGlobalStyle } from "styled-components";
-import { saveAs } from "file-saver";
-import { jsPDF } from "jspdf";
 import PDFFile from "./PDFFile.jsx";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import "./incidentDetails.css"
+import "./incidentDetails.css";
+import Swal from "sweetalert2";
+
+import { KJUR } from "jsrsasign";
+import withAuth from "../components/withAuth";
 
 const IncidentDetails = () => {
   const urlPath = window.location.pathname;
@@ -15,6 +17,7 @@ const IncidentDetails = () => {
   console.log(lastPart);
   const [dateReported, setDateReported] = useState("");
   const [timeReported, setTimeReported] = useState("");
+  const [status, setStatus] = useState("Loading...");
   // Faculty Member Side
   const [userType, setUserType] = useState("");
   const [incidentName, setIncidentName] = useState("");
@@ -41,6 +44,11 @@ const IncidentDetails = () => {
   const [plannedAction, setPlannedAction] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [handlerID, setHandlerID] = useState("");
+  const [handlerMedia, setHandlerMedia] = useState("");
+
+  // Identification / Verification
+  const [userId, setUserId] = useState("");
+  const [isHandler, setIsHandler] = useState(false);
 
   const handleSubmit = () => {
     Axios.get("api/getIncidentDetails", {
@@ -61,6 +69,7 @@ const IncidentDetails = () => {
       console.log(response.data.result[0]);
       setDateReported(response.data.result[0].dateReported.split("T")[0]);
       setTimeReported(response.data.result[0].timeReported);
+      setStatus(response.data.result[0].status);
       //Faculty Member
       setIncidentName(response.data.result[0].incidentName);
       setIncidentDate(
@@ -87,19 +96,20 @@ const IncidentDetails = () => {
       setPlannedAction(response.data.result[0].plannedAction);
       setAdditionalNotes(response.data.result[0].additionalNote);
       setHandlerID(response.data.result[0].handlerID);
+      setHandlerMedia(response.data.result[0].handlerPicture);
     });
   }, []);
 
   const handleClick = () => {
     // Handle click event here
     console.log("Incident tab clicked");
-    console.log(id);
+    console.log(lastPart);
   };
 
   const ResolveIndicent = () => {
     console.log("Incident resolved");
     Axios.post("http://localhost:8800/api/resolveIncident", {
-      incidentID: id,
+      incidentID: lastPart,
       handlerID: handlerID,
     })
       .then((response) => {
@@ -111,8 +121,9 @@ const IncidentDetails = () => {
             text: "Incident resolved!",
             icon: "success",
             confirmButtonText: "OK",
+          }).then(() => {
+            window.location = "/handler-home"; // Redirect to '/handler-home'
           });
-          window.location.reload();
         }
       })
       .catch((error) => {
@@ -168,14 +179,34 @@ const IncidentDetails = () => {
     margin-top: 10px;
   `;
 
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = KJUR.jws.JWS.parse(token);
+      const userType = decodedToken.payloadObj.userType;
+      setIsHandler(userType === "Incident handler");
+    }
+  }, []);
+
   return (
     <div className="p-4 ml-20">
+      {isHandler && (
+        <button>
+          <Link to="/handler-home">Back to home</Link>
+        </button>
+      )}
+      {!isHandler && (
+        <button>
+          <Link to="/home">Back to home</Link>
+        </button>
+      )}
       <h1>Incident Details Page</h1>
       <h2 className="text-2xl font-bold mb-3 text-black-200">
         Incident name: {incidentName}
       </h2>
       <p>Issued date: {dateReported}</p>
       <p>Issued time: {timeReported}</p>
+      <p>Incident status: {status}</p>
       {/* Faculty Member Side */}
       <div className="first-container mb-8 flex">
         <div className="second-container w-full">
@@ -211,8 +242,12 @@ const IncidentDetails = () => {
             <span className="text-gray-800">{userInfo}</span>
           </p>
           <div className="incident-image ml-10 mb-3">
-          <span className="font-bold mb-10">Incident picture/file: </span>{" "}
-            <img src={media} alt="Photo of incident" className="max-w-full mt-10" />
+            <span className="font-bold mb-10">Incident picture/file: </span>{" "}
+            <img
+              src={media}
+              alt="Photo of incident"
+              className="max-w-full mt-10"
+            />
           </div>
         </div>
         {/* Incident Handler Side */}
@@ -268,22 +303,31 @@ const IncidentDetails = () => {
             <span className="font-bold">Handler ID:</span>{" "}
             <span className="text-gray-800">{handlerID}</span>
           </p>
+          <div className="incident-image">
+            <img src={handlerMedia} alt="Photo of incident" />
+          </div>
         </div>
       </div>
 
       <div className="mt-4">
-        <Link
-          to={"/response-form/" + lastPart}
-          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded mr-2"
-        >
-          Complete Response Form
-        </Link>
-        <button
-          className="incident-tab p-3 bg-orange-500 ml-2"
-          onClick={ResolveIndicent}
-        >
-          Mark as Resolved
-        </button>
+        {isHandler && status != "Resolved" && status != "Loading..." && (
+          <>
+            <button
+              type="submit"
+              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+            >
+              <Link to={"/response-form/" + lastPart}>
+                Complete Response Form
+              </Link>
+            </button>
+            <button
+              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+              onClick={ResolveIndicent}
+            >
+              Mark as Resolved
+            </button>
+          </>
+        )}
         <PDFDownloadLink document={<PDFFile />} fileName="incident_summary.pdf">
           {({ blob, url, loading, error }) =>
             loading ? (

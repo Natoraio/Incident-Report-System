@@ -351,7 +351,21 @@ app.post("/api/submitHandlerReport", (req, res) => {
             console.error(err);
             return res.json({ success: false, message: "Insert Unsuccessful" });
           } else {
-            return res.json({ success: true, result });
+            db.query(
+              "UPDATE incidents SET status = 'Ongoing' WHERE incidentID = ?",
+              [incidentID],
+              (err, result) => {
+                if (err) {
+                  console.error(err);
+                  return res.json({
+                    success: false,
+                    message: "update3 Unsuccessful",
+                  });
+                } else {
+                  return res.json({ success: true, result });
+                }
+              }
+            );
           }
         }
       );
@@ -445,9 +459,9 @@ app.get("/api/getIncidentsPerType", (req, res) => {
   });
 });
 app.get("/api/getIncidentHistory", (req, res) => {
-  const userID = req.body.userID;
+  const userID = req.query.userID;
   db.query(
-    "SELECT incidents.incidentID,incidents.incidentName,incidents.dateOccur,handler_report.criticalID, criticalities.criticalName AS criticality, incident_report.dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_report ON incidents.incidentID =  incident_report.incidentID WHERE incidents.status='Resolved' AND incident_report.reporterUserID = ?;",
+    "SELECT incidents.incidentID,incidents.incidentName,handler_report.criticalID, criticalities.criticalName AS criticality, incident_report.dateResolved, incident_report.dateReported FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN criticalities ON handler_report.criticalID = criticalities.criticalID JOIN incident_report ON incidents.incidentID =  incident_report.incidentID WHERE incidents.status='Resolved' AND incident_report.reporterUserID = ?;",
     [userID],
     (err, result) => {
       if (err) {
@@ -520,4 +534,3 @@ app.post("/api/resolveIncident", (req, res) => {
     }
   });
 });
-
