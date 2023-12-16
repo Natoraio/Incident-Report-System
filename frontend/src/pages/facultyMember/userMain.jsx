@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { KJUR } from "jsrsasign";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
+import "./userMain.css"
 
 const UserMain = () => {
   const [userId, setUserId] = useState("");
@@ -52,19 +53,20 @@ const UserMain = () => {
       <div className="text-content ml-10">
         <h1>Welcome back, {name}!</h1>
         <h2 className="mt-5">To SIIT Cyber Incident Report Database System</h2>
-        <h3 className="mt-5">Select what action you want to complete today.</h3>
+        <h3 className="mt-1">Select what action you want to complete today.</h3>
       </div>
-      <div className="action-buttons ml-10 mt-10">
-        <button className="p-3 bg-orange-500">
-          <Link to={"/report"}>Report an Incident</Link>
-        </button>
-        <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/incident-progress/" + userId}>View Report Progress</Link>
-        </button>
-        <button className="p-3 bg-orange-500 ml-2">
-          <Link to={"/report-summary"}>Report Summary</Link>
-        </button>
-      </div>
+      <div className="action-buttons ml-20 mt-10">
+  <button className="p-5 bg-orange-500" style={{marginRight: '20px' }}>
+    <Link to={"/report"} style={{ color: 'white' }}>Report an Incident</Link>
+  </button>
+  <button className="p-5 bg-orange-500" style={{ marginRight: '15px' }}>
+    <Link to={"/incident-progress/" + userId} style={{ color: 'white' }}>View Report Progress</Link>
+  </button>
+  
+</div>
+
+
+
     </>
   );
 };

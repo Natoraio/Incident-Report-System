@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import IncidentListHistory from "../../components/incidentListHistory";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
+import "./incidentHistory.css"
 
 const IncidentHistory = () => {
   const urlPath = window.location.pathname;
@@ -44,7 +45,14 @@ const IncidentHistory = () => {
           view more details
         </h2>
 
-        <div className="incident-container">
+        <div className="incident-container" style={{ marginTop: '40px' }}>
+        <div className="labels-container">
+            <div>Incident Name</div>
+            <div>Criticality Level</div>
+            <div>Occured Date</div>
+            <div>Resolved Date</div>
+            <div>View Details</div>
+          </div>
           {incidentList.map((incident, index) => (
             <IncidentListHistory
               key={index}

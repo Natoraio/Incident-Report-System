@@ -1,0 +1,35 @@
+.first-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(48%, 1fr)); /* Adjust width as needed */
+  grid-gap: 20px; /* Adjust the gap between grid items as needed */
+}
+
+.second-container {
+  box-sizing: border-box;
+}
+
+.incident-image {
+  max-width: 50%;
+}
+
+@media (max-width: 700px) {
+  .first-container {
+    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+  }
+}
+
+/* Add margin to the right of the "Faculty Member" container */
+.first-container > :first-child {
+  margin-right: 700px; /* Adjust the margin as needed */
+}
+
+.text-xl {
+  color: #770c0c;
+  display: inline-block;
+  border: 2px solid #770c0c;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 10px;
+  border-radius: 8px;
+}
