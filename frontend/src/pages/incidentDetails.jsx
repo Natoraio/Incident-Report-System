@@ -342,4 +342,4 @@ const IncidentDetails = () => {
   );
 };
 
-export default IncidentDetails;
+export default withAuth(IncidentDetails, "StaffAndHandler");
