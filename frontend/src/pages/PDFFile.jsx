@@ -8,7 +8,6 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import logo from "./logo-siit.png";
-import IncidentDetails from "./incidentDetails";
 import Axios from "axios";
 
 const styles = StyleSheet.create({
@@ -36,6 +35,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 14,
     textAlign: "justify",
+    gap: 10,
   },
   boldText: {
     width: "100%",
@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
 });
 
 const PDFFile = () => {
-  const [incidentDetails, setIncidentDetails] = useState([]);
 
   const urlPath = window.location.pathname;
   const parts = urlPath.split("/");
@@ -129,6 +128,7 @@ const PDFFile = () => {
   const [plannedAction, setPlannedAction] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [handlerID, setHandlerID] = useState("");
+  const [handlerMedia, setHandlerMedia] = useState("");
 
   const handleSubmit = () => {
     Axios.get("api/getIncidentDetails", {
@@ -176,6 +176,7 @@ const PDFFile = () => {
       setPlannedAction(response.data.result[0].plannedAction);
       setAdditionalNotes(response.data.result[0].additionalNote);
       setHandlerID(response.data.result[0].handlerID);
+      setHandlerMedia(response.data.result[0].handlerPicture);
     });
   }, []);
 
@@ -224,10 +225,9 @@ const PDFFile = () => {
 
         {/* Faculty Member and Incident Handler Sections */}
 
-        <Text style={styles.boldText}>FACULTY MEMBER</Text>
-        <View style={styles.section}>
+        <Text style={styles.boldText}>Faculty Member</Text>
           <View style={styles.column}>
-            <Text style={styles.text}>
+          <Text style={styles.text}>
               Incident Date: {incidentDate}
               {"\n"}
               Incident Time: {incidentTime}
@@ -242,16 +242,16 @@ const PDFFile = () => {
               {"\n"}
               Reporter's ID: {userInfo}
             </Text>
-            {media && (
-              <Image
-                style={styles.image}
-                src={media}
-                alt="Reported Incident Photo"
-              />
-            )}
-            <Text style={styles.labelText}>Reported Incident Photo</Text>
-          </View>
-        </View>
+              {media && (
+                <Image
+                  style={styles.image}
+                  src={media}
+                  alt="Reported Incident Photo"
+                />
+              )}
+              <Text style={styles.labelText}>Reported Incident Photo</Text>
+            </View>
+
         <Text
           style={styles.pageNumber}
           render={({ pageNumber, totalPages }) =>
@@ -264,31 +264,41 @@ const PDFFile = () => {
         style={{ ...styles.body, backgroundColor: "#ffff", marginTop: "50px" }}
       >
         <Text style={styles.boldText}>Incident Handler</Text>
-        <Text style={styles.text}>
-          Response Description: {reponseDescription}
-          {"\n"}
-          Criticality: {criticality}
-          {"\n"}
-          Affected Hosts: {affectedHosts}
-          {"\n"}
-          IP Address: {IPAddress}
-          {"\n"}
-          Source IP: {sourceIP}
-          {"\n"}
-          Communication Host: {comHost}
-          {"\n"}
-          Other Application: {otherApp}
-          {"\n"}
-          Impact Assessment: {impactAssessment}
-          {"\n"}
-          Action Taken: {actionTaken}
-          {"\n"}
-          Planned Action: {plannedAction}
-          {"\n"}
-          Additional Notes: {additionalNotes}
-          {"\n"}
-          Handler ID: {handlerID}
-        </Text>
+          <View style={styles.column}>
+          <Text style={styles.text}>
+            Response Description: {reponseDescription}
+            {"\n"}
+            Criticality: {criticality}
+            {"\n"}
+            Affected Hosts: {affectedHosts}
+            {"\n"}
+            IP Address: {IPAddress}
+            {"\n"}
+            Source IP: {sourceIP}
+            {"\n"}
+            Communication Host: {comHost}
+            {"\n"}
+            Other Application: {otherApp}
+            {"\n"}
+            Impact Assessment: {impactAssessment}
+            {"\n"}
+            Action Taken: {actionTaken}
+            {"\n"}
+            Planned Action: {plannedAction}
+            {"\n"}
+            Additional Notes: {additionalNotes}
+            {"\n"}
+            Handler ID: {handlerID}
+            </Text>
+              {handlerMedia && (
+                <Image
+                  style={styles.image}
+                  src={handlerMedia}
+                  alt="Resolved Incident Photo"
+                />
+              )}
+              <Text style={styles.labelText}>Resolved Incident Photo</Text>
+            </View>
 
         <Text
           style={styles.pageNumber}
