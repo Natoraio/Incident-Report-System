@@ -81,8 +81,16 @@ const ResponseForm = () => {
   const [imageBase64, setImageBase64] = useState("");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    const maxSize = 550 * 550; // 550x550px
 
-    if (file) {
+    if (file.size > maxSize) {
+      Swal.fire(
+        "Error!",
+        "Image dimension must be less than 550 x 550px.",
+        "error"
+      );
+      e.target.value = ""; // Clear the input
+    } else {
       const reader = new FileReader();
       reader.onloadend = () => {
         // When the reader is done reading the file, the result attribute contains the Base64 string

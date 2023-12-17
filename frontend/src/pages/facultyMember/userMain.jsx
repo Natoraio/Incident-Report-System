@@ -3,7 +3,51 @@ import { Link, useNavigate } from "react-router-dom";
 import { KJUR } from "jsrsasign";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
-import "./userMain.css";
+// import "./userMain.css";
+import styled, { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+* { 
+margin: 0;
+padding: 0;
+}
+
+body {
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 50px;
+  padding-left: 100px;
+  padding-right: 100px;
+  font-size: 20px;
+  font-family: 'Kanit', sans-serif;
+}
+`;
+
+const TextContent = styled.div`
+  padding-top: 50px;
+  padding-left: 100px;
+  padding-right: 100px;
+`;
+
+const WelcomeBackHeading = styled.h1`
+  padding-left: 100px;
+  padding-bottom: 20px;
+`;
+
+const WelcomeBackSubHeading = styled.h2`
+  padding-left: 120px;
+`;
+
+const ActionButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  padding-top: 50px;
+  padding-left: 200px;
+  padding-right: 100px;
+`;
 
 const UserMain = () => {
   const [userId, setUserId] = useState("");
@@ -49,39 +93,57 @@ const UserMain = () => {
 
   return (
     <>
-      <div
-        className="ml-10 mb-10"
-        onClick={handleLogout}
-        style={{
-          cursor: "pointer",
-          color: "#390656",
-          position: "relative",
-          display: "inline-block",
-        }}
-      >
-        Not you? <span className="underline-slant slanted-text">Log out</span>
-      </div>
-      <div className="text-content">
-        <h1 className="welcome-back">Welcome back, {name}!</h1>
-        <h2 className="welcome-back mt-5">
+      <GlobalStyle />
+      <button className="p-3 m-2" onClick={handleLogout}>
+        Not you?{" "}
+        <span
+          style={{
+            textDecoration: "underline",
+            fontStyle: "italic",
+            fontWeight: "bold",
+          }}
+        >
+          Logout
+        </span>
+      </button>
+
+      <TextContent>
+        <WelcomeBackHeading>Welcome back, {name}!</WelcomeBackHeading>
+        <WelcomeBackSubHeading>
           To SIIT Cyber Incident Report Database System
-        </h2>
-        <h3 className="welcome-back">
+        </WelcomeBackSubHeading>
+        <WelcomeBackSubHeading>
           Select what action you want to complete today.
-        </h3>
-      </div>
-      <div className="action-buttons">
-        <button className="p-5 bg-orange-500" style={{ marginRight: "25px" }}>
-          <Link to={"/report"} style={{ color: "white" }}>
+        </WelcomeBackSubHeading>
+      </TextContent>
+
+      <ActionButtons>
+        <button style={{ backgroundColor: "#390656", color: "#fff" }}>
+          <Link
+            to={"/report"}
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              ":hover": { backgroundColor: "#d9d9d9" },
+            }}
+          >
             Report an Incident
           </Link>
         </button>
-        <button className="p-5 bg-orange-500" style={{ marginRight: "15px" }}>
-          <Link to={"/incident-progress/" + userId} style={{ color: "white" }}>
+
+        <button style={{ backgroundColor: "#390656", color: "#fff" }}>
+          <Link
+            to={"/incident-progress/" + userId}
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              ":hover": { backgroundColor: "#d9d9d9" },
+            }}
+          >
             View Report Progress
           </Link>
         </button>
-      </div>
+      </ActionButtons>
     </>
   );
 };

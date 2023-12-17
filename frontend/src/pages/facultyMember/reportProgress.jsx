@@ -3,7 +3,75 @@ import { Link } from "react-router-dom";
 import IncidentProgress from "../../components/incidentProgress";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
-import "./reportProgress.css";
+import styled, { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+* { 
+margin: 0;
+padding: 0;
+}
+
+body {
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 50px;
+  padding-left: 100px;
+  padding-right: 100px;
+  font-size: 20px;
+  font-family: 'Kanit', sans-serif;
+}
+`;
+
+const CategorySeparator = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-bottom: 3px solid #d9d9d9;
+  font-size: 20px;
+  margin-top: 2rem;
+
+  span {
+    flex: 1;
+    text-align: center;
+    padding: 1rem;
+  }
+`;
+
+const IncidentSeparator = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 20px;
+
+  span {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+  }
+`;
+
+const StyledIncident = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  border-bottom: 1px solid #ccc;
+  // padding: 0.5rem;
+  font-size: 18px;
+  padding-bottom: 0.3rem;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  margin-left: 1rem;
+`;
+
+const StyledButton = styled.button`
+  border-radius: 10px;
+  margin: 1rem;
+`;
 
 const ReportProgress = () => {
   const urlPath = window.location.pathname;
@@ -35,8 +103,9 @@ const ReportProgress = () => {
 
   return (
     <>
+      <GlobalStyle />
       <Link to="/home" className="back-to-home-link">
-        Back to home
+        ◀ Back to home
       </Link>
       <div className="text-content ml-10">
         <h1>Incident Tracking</h1>
@@ -45,59 +114,43 @@ const ReportProgress = () => {
           the individual incident to view more details!
         </h2>
 
-        <div className="incident-container" style={{ marginTop: "40px" }}>
-          <div className="labels-container">
-            <div>Incident Name</div>
-            <div>Progress/Status</div>
-            <div>Criticality Level</div>
-            <div>Report Date</div>
-            <div>View Details</div>
-          </div>
-          {incidentList.map((incident, index) => (
-            <div key={index} className="mb-4" style={{ marginTop: "60px" }}>
-              <div
-                className="incident-detail incident-name"
-                name={incident.name}
-              >
-                {incident.name}
-              </div>
-              <div className="incident-detail" progress={incident.progress}>
-                {incident.progress}
-              </div>
-              <div className="incident-detail" severity={incident.severity}>
-                {incident.severity}
-              </div>
-              <div className="incident-detail" date={incident.date}>
-                {incident.date}
-              </div>
-              <div className="view-details-button">
-                <button className="p-5 bg-purple-500">
-                  <Link
-                    to={`/incident-details/${incident.incidentID}`}
-                    style={{ color: "white" }}
-                  >
-                    View Details
-                  </Link>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <CategorySeparator>
+          <span>Incident Name</span>
+          <span>Progress / Status</span>
+          <span>Criticality Level</span>
+          <span>Reported Date</span>
+        </CategorySeparator>
+
+        {incidentList.map((incident, index) => (
+          <StyledLink
+            to={`/incident-details/${incident.incidentID}`}
+            key={incident.incidentID}
+          >
+            <StyledIncident>
+              <IncidentSeparator>
+                <span>{incident.name}</span>
+                <span>{incident.progress}</span>
+                <span>{incident.severity}</span>
+                <span>{incident.date.split("T")[0]}</span>
+              </IncidentSeparator>
+            </StyledIncident>
+          </StyledLink>
+        ))}
       </div>
-      <div className="action-buttons ml-10 mt-10 mb-3">
-        <button
-          className="p-5 bg-orange-500"
-          style={{
-            display: "block",
-            margin: "0 auto",
-            marginLeft: "45%",
-            transform: "translateX(-50%)",
-          }}
-        >
-          <Link to={"/incident-history/" + lastPart} style={{ color: "white" }}>
+
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <StyledButton style={{ backgroundColor: "#390656", color: "#fff" }}>
+          <Link
+            to={"/incident-history/" + lastPart}
+            style={{
+              color: "#fff",
+              textDecoration: "none",
+              ":hover": { backgroundColor: "#d9d9d9" },
+            }}
+          >
             Incident History
           </Link>
-        </button>
+        </StyledButton>
       </div>
     </>
   );

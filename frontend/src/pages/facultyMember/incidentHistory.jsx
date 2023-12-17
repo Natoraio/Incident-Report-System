@@ -3,7 +3,70 @@ import { Link } from "react-router-dom";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
 import IncidentListHistory from "../../components/incidentListHistory";
-import "./incidentHistory.css";
+import styled, { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+* { 
+margin: 0;
+padding: 0;
+}
+
+body {
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  padding-top: 50px;
+  padding-left: 100px;
+  padding-right: 100px;
+  font-size: 20px;
+  font-family: 'Kanit', sans-serif;
+}
+`;
+
+const CategorySeparator = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-bottom: 3px solid #d9d9d9;
+  font-size: 20px;
+  margin-top: 2rem;
+
+  span {
+    flex: 1;
+    text-align: center;
+    padding: 1rem;
+  }
+`;
+
+const IncidentSeparator = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  font-size: 20px;
+
+  span {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem;
+  }
+`;
+
+const StyledIncident = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  border-bottom: 1px solid #ccc;
+  // padding: 0.5rem;
+  font-size: 18px;
+  padding-bottom: 0.3rem;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  margin-left: 1rem;
+`;
 
 const IncidentHistory = () => {
   const urlPath = window.location.pathname;
@@ -33,8 +96,9 @@ const IncidentHistory = () => {
 
   return (
     <>
+      <GlobalStyle />
       <Link to="/home" className="back-to-home-link">
-        Back to home
+        ◀ Back to home
       </Link>
       <div className="text-content ml-10">
         <h1>Incident History</h1>
@@ -43,35 +107,28 @@ const IncidentHistory = () => {
           view more details
         </h2>
 
-        <div className="incident-container" style={{ marginTop: "40px" }}>
-          <div className="labels-container">
-            <div>Incident Name</div>
-            <div>Criticality Level</div>
-            <div>Occurred Date</div>
-            <div>Resolved Date</div>
-            <div>View Details</div>
-          </div>
-          {incidentList.map((incident, index) => (
-            <div key={index} className="mb-4" style={{ marginTop: "60px" }}>
-              <div className="incident-detail incident-name">
-                {incident.name}
-              </div>
-              <div className="incident-detail">{incident.criticality}</div>
-              <div className="incident-detail">{incident.reportedDate}</div>
-              <div className="incident-detail">{incident.resolvedDate}</div>
-              <div className="view-details-button">
-                <button className="p-5 bg-purple-500">
-                  <Link
-                    to={`/incident-details/${incident.incidentID}`}
-                    style={{ color: "white" }}
-                  >
-                    View Details
-                  </Link>
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <CategorySeparator>
+          <span>Incident Name</span>
+          <span>Criticality Level</span>
+          <span>Occurred Date</span>
+          <span>Resolved Date</span>
+        </CategorySeparator>
+
+        {incidentList.map((incident, index) => (
+          <StyledLink
+            to={`/incident-details/${incident.incidentID}`}
+            key={incident.incidentID}
+          >
+            <StyledIncident>
+              <IncidentSeparator>
+                <span>{incident.name}</span>
+                <span>{incident.criticality}</span>
+                <span>{incident.reportedDate}</span>
+                <span>{incident.resolvedDate}</span>
+              </IncidentSeparator>
+            </StyledIncident>
+          </StyledLink>
+        ))}
       </div>
     </>
   );
