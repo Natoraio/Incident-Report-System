@@ -235,7 +235,7 @@ app.get("/api/getIncidents", (req, res) => {
 
 app.get("/api/getResolvedIncidents", (req, res) => {
   db.query(
-    "SELECT incidents.incidentID,incidents.incidentName,handler_report.handlerReportID, incident_type.incidentTypeName AS incidentTypeName, incident_report.dateResolved as dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status='Resolved';",
+    "SELECT incidents.incidentID, incidents.incidentName, handler_report.handlerReportID, incident_type.incidentTypeName AS incidentTypeName, incident_report.dateResolved as dateResolved FROM incidents JOIN handler_report ON incidents.incidentID = handler_report.incidentID JOIN incident_type ON incidents.incidentTypeID = incident_type.IncidentTypeID JOIN incident_report ON incidents.incidentID = incident_report.incidentID WHERE incidents.status='Resolved' ORDER BY incident_report.dateResolved DESC;",
     (err, result) => {
       if (err) {
         console.log(err);
@@ -535,9 +535,6 @@ app.post("/api/resolveIncident", (req, res) => {
   // Format date and time
   const date = adjustedDate.toISOString().split("T")[0]; // yyyy-mm-dd
   const time = adjustedDate.toISOString().split("T")[1].split(".")[0]; // xx:xx:xx
-
-  console.log(dateReported);
-  console.log(timeReported);
 
   const sql =
     "UPDATE incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID SET status = 'Resolved', incident_report.dateResolved = ?, incident_report.timeResolved = ?, incident_report.handlerID = ? WHERE incidents.incidentID = ?";

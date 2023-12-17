@@ -28,11 +28,10 @@ body {
 `;
 
 const Content = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-margin-top: 30px;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
 `;
 
 const Form = styled.form`
@@ -168,13 +167,11 @@ const ReportForm = () => {
   const [imageBase64, setImageBase64] = useState("");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    const maxSize = 550 * 550; // 550x550px
+    const maxSize = 360 * 360; // 550x550px
 
     if (file.size > maxSize) {
-      Swal.fire(
-        "Error!",
-        "Image dimension must be less than 550 x 550px.",
-        "error"
+      alert(
+        "File is too large, please upload an image smaller than 360 x 360 pixels."
       );
       e.target.value = ""; // Clear the input
     } else {
@@ -294,9 +291,9 @@ const ReportForm = () => {
               </Label>
               <br />
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <SubmitButton type="submit" onClick={handleSubmit}>
-                Submit
-              </SubmitButton>
+                <SubmitButton type="submit" onClick={handleSubmit}>
+                  Submit
+                </SubmitButton>
               </div>
             </Form>
           </div>

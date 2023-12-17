@@ -29,6 +29,7 @@ const HandlerMain = () => {
         console.log("getIncidents is reached");
         setIncidents(response.data.incidents);
         console.log(response.data.incidents);
+        sortByLatestDateAndTime();
       })
       .catch((error) => {
         console.error("Error fetching incidents:", error);
@@ -94,7 +95,7 @@ const HandlerMain = () => {
       navigate("/login");
     }
   };
-  
+
   const GlobalStyle = createGlobalStyle`
   * { 
   margin: 0;
