@@ -200,7 +200,7 @@ const HistoryStatistics = () => {
         The number of incidents this month is: {noIncidents}
       </StatisticParagraph>
       <StatisticParagraph>
-        The average resolve time this month is: {avgResolveTime}
+        The average resolve time this month is: {avgResolveTime} hours
       </StatisticParagraph>
 
       <ChartsContainer>

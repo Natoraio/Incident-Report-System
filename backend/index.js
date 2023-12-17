@@ -168,9 +168,17 @@ app.post("/api/submitForm", (req, res) => {
   ];
 
   const newDate = new Date();
+  const timeZoneOffset = 7 * 60; // Thailand time offset in minutes (GMT+7)
 
-  const dateReported = newDate.toISOString().split("T")[0]; // yyyy-mm-dd
-  const timeReported = newDate.toISOString().split("T")[1].split(".")[0]; // xx:xx:xx
+  // Adjust the date and time
+  const adjustedDate = new Date(newDate.getTime() + timeZoneOffset * 60000);
+
+  // Format date and time
+  const dateReported = adjustedDate.toISOString().split("T")[0]; // yyyy-mm-dd
+  const timeReported = adjustedDate.toISOString().split("T")[1].split(".")[0]; // xx:xx:xx
+
+  console.log(dateReported);
+  console.log(timeReported);
 
   db.query(sql, values, (err, result) => {
     if (err) {
@@ -519,8 +527,18 @@ app.post("/api/resolveIncident", (req, res) => {
   const handlerID = req.body.handlerID;
   const newDate = new Date();
 
-  const date = newDate.toISOString().split("T")[0]; // yyyy-mm-dd
-  const time = newDate.toISOString().split("T")[1].split(".")[0]; // xx:xx:xx
+  const timeZoneOffset = 7 * 60; // Thailand time offset in minutes (GMT+7)
+
+  // Adjust the date and time
+  const adjustedDate = new Date(newDate.getTime() + timeZoneOffset * 60000);
+
+  // Format date and time
+  const date = adjustedDate.toISOString().split("T")[0]; // yyyy-mm-dd
+  const time = adjustedDate.toISOString().split("T")[1].split(".")[0]; // xx:xx:xx
+
+  console.log(dateReported);
+  console.log(timeReported);
+
   const sql =
     "UPDATE incidents JOIN incident_report ON incidents.incidentID = incident_report.incidentID SET status = 'Resolved', incident_report.dateResolved = ?, incident_report.timeResolved = ?, incident_report.handlerID = ? WHERE incidents.incidentID = ?";
   const values = [date, time, handlerID, incidentID];
