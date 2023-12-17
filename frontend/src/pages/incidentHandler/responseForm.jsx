@@ -7,6 +7,54 @@ import withAuth from "../../components/withAuth";
 import { Link } from "react-router-dom";
 import styled, { createGlobalStyle } from "styled-components";
 
+const GlobalStyle = createGlobalStyle`
+  * { 
+  margin: 0;
+  padding: 0;
+  }
+  
+  body {
+    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    // padding-top: 50px;
+    padding-left: 100px;
+    padding-right: 100px;
+    font-size: 24px;
+    font-family: 'Kanit', sans-serif;
+  }
+`;
+
+const Content = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 50px;
+`;
+
+const LeftContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 50%;
+`;
+
+const RightContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 50%;
+`;
+
+const FormLabel = styled.label`
+  margin-bottom: 8px;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+`;
+
 const ResponseForm = () => {
   const navigate = useNavigate();
 
@@ -105,54 +153,6 @@ const ResponseForm = () => {
         });
     }
   };
-
-  const GlobalStyle = createGlobalStyle`
-  * { 
-  margin: 0;
-  padding: 0;
-  }
-  
-  body {
-    align-items: center;
-    flex-direction: column;
-    align-items: stretch;
-    // padding-top: 50px;
-    padding-left: 100px;
-    padding-right: 100px;
-    font-size: 24px;
-    font-family: 'Kanit', sans-serif;
-  }
-`;
-
-  const Content = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    gap: 50px;
-  `;
-
-  const LeftContent = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    max-width: 50%;
-  `;
-
-  const RightContent = styled.div`
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    max-width: 50%;
-  `;
-
-  const FormLabel = styled.label`
-    margin-bottom: 8px;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-  `;
 
   return (
     <>

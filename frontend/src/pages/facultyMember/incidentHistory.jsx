@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import IncidentListHistory from "../../components/incidentListHistory";
 import Axios from "axios";
 import withAuth from "../../components/withAuth";
+import IncidentListHistory from "../../components/incidentListHistory";
 import "./incidentHistory.css";
 
 const IncidentHistory = () => {
   const urlPath = window.location.pathname;
   const parts = urlPath.split("/");
   const lastPart = parts.pop() || parts.pop();
-  console.log(lastPart);
 
   const [incidentList, setIncidentList] = useState([]);
 
@@ -18,7 +17,6 @@ const IncidentHistory = () => {
       params: { userID: lastPart },
     })
       .then((response) => {
-        console.log(response);
         const incidents = response.data.incidents.map((item) => ({
           name: item.incidentName,
           criticality: item.criticality,
@@ -29,15 +27,15 @@ const IncidentHistory = () => {
         setIncidentList(incidents);
       })
       .catch((error) => {
-        console.error("Error fetching incident progress:", error);
+        console.error("Error fetching incident history:", error);
       });
   }, []);
 
   return (
     <>
-      <button>
-        <Link to="/home">Back to home</Link>
-      </button>
+      <Link to="/home" className="back-to-home-link">
+        Back to home
+      </Link>
       <div className="text-content ml-10">
         <h1>Incident History</h1>
         <h2 className="mt-5">
@@ -49,19 +47,29 @@ const IncidentHistory = () => {
           <div className="labels-container">
             <div>Incident Name</div>
             <div>Criticality Level</div>
-            <div>Occured Date</div>
+            <div>Occurred Date</div>
             <div>Resolved Date</div>
             <div>View Details</div>
           </div>
           {incidentList.map((incident, index) => (
-            <IncidentListHistory
-              key={index}
-              name={incident.name}
-              criticality={incident.criticality}
-              reportedDate={incident.reportedDate}
-              resolvedDate={incident.resolvedDate}
-              incidentID={incident.incidentID}
-            />
+            <div key={index} className="mb-4" style={{ marginTop: "60px" }}>
+              <div className="incident-detail incident-name">
+                {incident.name}
+              </div>
+              <div className="incident-detail">{incident.criticality}</div>
+              <div className="incident-detail">{incident.reportedDate}</div>
+              <div className="incident-detail">{incident.resolvedDate}</div>
+              <div className="view-details-button">
+                <button className="p-5 bg-purple-500">
+                  <Link
+                    to={`/incident-details/${incident.incidentID}`}
+                    style={{ color: "white" }}
+                  >
+                    View Details
+                  </Link>
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       </div>

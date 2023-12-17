@@ -5,7 +5,7 @@ import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import withAuth from "../../components/withAuth";
 import { Link } from "react-router-dom";
-import './reportForm.css';
+import "./reportForm.css";
 
 const ReportForm = () => {
   const [incidentName, setIncidentName] = useState("");
@@ -115,62 +115,66 @@ const ReportForm = () => {
 
   return (
     <>
-    <button>
-        <Link to="/home">Back to home</Link>
-      </button>
-    <div className="report-container">
-      <h1>Incident Report Form</h1>
-      <p className="intro-text">To report a new incident into the system, please fill in all the fields. Image file upload is optional, but is very helpful!</p>
-      <div className="details-blah">
-        <form onSubmit={handleSubmit} className="flex flex-col">
-          <label>
-            Incident Name:
-            <input
-              type="text"
-              value={incidentName}
-              onChange={(e) => setIncidentName(e.target.value)}
-            />
-          </label>
-          <label>
-            Incident Type:
-            <select
-              className="p-3 rounded"
-              value={incidentType}
-              onChange={(e) => setIncidentType(e.target.value)}
-            >
-              <option value="">Select Incident Type</option>
-              <option value="1">Compromised systems / applications</option>
-              <option value="2">Comprimised user credentials</option>
-              <option value="3">Network attacks</option>
-              <option value="4">Malware</option>
-              <option value="5">Lost equipment / theft</option>
-              <option value="6">Physical break-in</option>
-              <option value="7">Social engineering</option>
-              <option value="9">Law enforcement request</option>
-              <option value="10">Policy violation</option>
-              <option value="11">Legal / copyright violation</option>
-              <option value="12">PII data breach / data exposure</option>
-              <option value="13">Other</option>
-            </select>
-            {incidentType == "13" && (
+      <Link to="/home" className="back-to-home-link">
+        Back to home
+      </Link>
+
+      <div className="report-container">
+        <h1>Incident Report Form</h1>
+        <p className="intro-text">
+          To report a new incident into the system, please fill in all the
+          fields. Image file upload is optional, but is very helpful!
+        </p>
+        <div className="details-blah">
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <label>
+              Incident Name:
               <input
-                className="p-3 rounded"
                 type="text"
-                onChange={(e) => setOtherIncidentType(e.target.value)}
-                value={otherIncidentType}
+                value={incidentName}
+                onChange={(e) => setIncidentName(e.target.value)}
               />
-            )}
-          </label>
-          <br />
-          <label>
-            Incident Description:
-            <textarea
-              className="rounded w-96"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </label>
-          {/* <label>
+            </label>
+            <label>
+              Incident Type:
+              <select
+                className="p-3 rounded"
+                value={incidentType}
+                onChange={(e) => setIncidentType(e.target.value)}
+              >
+                <option value="">Select Incident Type</option>
+                <option value="1">Compromised systems / applications</option>
+                <option value="2">Comprimised user credentials</option>
+                <option value="3">Network attacks</option>
+                <option value="4">Malware</option>
+                <option value="5">Lost equipment / theft</option>
+                <option value="6">Physical break-in</option>
+                <option value="7">Social engineering</option>
+                <option value="9">Law enforcement request</option>
+                <option value="10">Policy violation</option>
+                <option value="11">Legal / copyright violation</option>
+                <option value="12">PII data breach / data exposure</option>
+                <option value="13">Other</option>
+              </select>
+              {incidentType == "13" && (
+                <input
+                  className="p-3 rounded"
+                  type="text"
+                  onChange={(e) => setOtherIncidentType(e.target.value)}
+                  value={otherIncidentType}
+                />
+              )}
+            </label>
+            <br />
+            <label>
+              Incident Description:
+              <textarea
+                className="rounded w-96"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </label>
+            {/* <label>
             Resulting Damage:
             <textarea
               value={damage}
@@ -185,55 +189,55 @@ const ReportForm = () => {
               onChange={(e) => setAffectedSytems(e.target.value)}
             />
           </label> */}
-          <label>
-            Incident Date:
-            <input
-              type="date"
-              value={incidentDate}
-              onChange={(e) => setIncidentDate(e.target.value)}
-            />
-          </label>
-          <label>
-            Incident Time:
-            <input
-              type="time"
-              value={incidentTime}
-              onChange={(e) => setIncidentTime(e.target.value)}
-            />
-          </label>
-          <label>
-            Incident Location:
-            <input
-              type="text"
-              value={incidentLocation}
-              onChange={(e) => setIncidentLocation(e.target.value)}
-            />
-          </label>
-          <label>
-            Incident Reported by:
-            <input
-              type="text"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-            />
-          </label>
-          <label>
-            Media Upload:
-            <input
-              id="file"
-              name="image"
-              type="file"
-              accept=".jpg, .jpeg, .png"
-              onChange={handleImageChange}
-            />
-          </label>
-          <br />
-          <button type="submit" onClick={handleSubmit}>
-            Submit
-          </button>
-        </form>
+            <label>
+              Incident Date:
+              <input
+                type="date"
+                value={incidentDate}
+                onChange={(e) => setIncidentDate(e.target.value)}
+              />
+            </label>
+            <label>
+              Incident Time:
+              <input
+                type="time"
+                value={incidentTime}
+                onChange={(e) => setIncidentTime(e.target.value)}
+              />
+            </label>
+            <label>
+              Incident Location:
+              <input
+                type="text"
+                value={incidentLocation}
+                onChange={(e) => setIncidentLocation(e.target.value)}
+              />
+            </label>
+            <label>
+              Incident Reported by:
+              <input
+                type="text"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+              />
+            </label>
+            <label>
+              Media Upload:
+              <input
+                id="file"
+                name="image"
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                onChange={handleImageChange}
+              />
+            </label>
+            <br />
+            <button type="submit" onClick={handleSubmit}>
+              Submit
+            </button>
+          </form>
         </div>
-    </div>
+      </div>
     </>
   );
 };
