@@ -1,6 +1,9 @@
 .first-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(48%, 1fr)); /* Adjust width as needed */
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(48%, 1fr)
+  ); /* Adjust width as needed */
   grid-gap: 20px; /* Adjust the gap between grid items as needed */
 }
 
@@ -20,7 +23,7 @@
 
 /* Add margin to the right of the "Faculty Member" container */
 .first-container > :first-child {
-  margin-right: 700px; /* Adjust the margin as needed */
+  margin-right: 650px; /* Adjust the margin as needed */
 }
 
 .text-xl {
@@ -32,4 +35,25 @@
   padding-right: 15px;
   padding-bottom: 10px;
   border-radius: 8px;
+}
+.button-style {
+  background-color: #390656;
+  border: none;
+  color: white;
+  padding: 15px 25px;
+  font-size: 21px;
+  margin-right: 30px;
+  cursor: pointer;
+  transition: background-color 0.1s;
+}
+
+.button-style:hover {
+  background-color: #770c0c;
+}
+.button-style,
+.button-style.white-text {
+  color: white !important;
+}
+.buttonss {
+  margin-left: 120px;
 }

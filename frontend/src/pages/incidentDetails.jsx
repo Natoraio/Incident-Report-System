@@ -138,47 +138,6 @@ const IncidentDetails = () => {
   };
   // Fetch incident details from API or props
 
-  const GlobalStyle = createGlobalStyle`
-  body {
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-  }
-`;
-
-  const IncidentDetailsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-  `;
-
-  const IncidentDetailsTitle = styled.h1`
-    font-size: 2em;
-    text-align: center;
-    color: palevioletred;
-  `;
-
-  const IncidentDetailsContent = styled.div`
-    padding: 20px;
-    border: 1px solid gray;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 600px;
-  `;
-
-  const StyledImage = styled.img`
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-top: 10px;
-  `;
-
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token) {
@@ -191,26 +150,26 @@ const IncidentDetails = () => {
   return (
     <div className="p-4 ml-20">
       {isHandler && (
-        <button>
-          <Link to="/handler-home">Back to home</Link>
-        </button>
+        <Link to="/handler-home" className="back-to-home-link">
+          Back to home
+        </Link>
       )}
       {!isHandler && (
-        <button>
-          <Link to="/home">Back to home</Link>
-        </button>
+        <Link to="/home" className="back-to-home-link">
+          Back to home
+        </Link>
       )}
-      <h1>Incident Details Page</h1>
-      <h2 className="text-2xl font-bold mb-3 text-black-200">
+      <h1 className="mt-5 ml-20">Incident Details Page</h1>
+      <h2 className="text-2xl font-bold mt-2 ml-20 mb-2 text-black-200">
         Incident name: {incidentName}
       </h2>
-      <p>Issued date: {dateReported}</p>
-      <p>Issued time: {timeReported}</p>
-      <p>Incident status: {status}</p>
+      <p className="ml-20 mb-1">Issued date: {dateReported}</p>
+      <p className="ml-20 mb-1">Issued time: {timeReported}</p>
+      <p className="ml-20 mb-1">Incident status: {status}</p>
       {/* Faculty Member Side */}
-      <div className="first-container mb-8 flex">
+      <div className="first-container mt-7 ml-20 mb-8 flex">
         <div className="second-container w-full">
-          <h2 className="text-xl font-bold ml-10 mb-3 text-orange-600">
+          <h2 className="text-xl font-bold ml-10 mb-5 text-orange-600">
             Faculty Member
           </h2>
           <p className="ml-10 mb-3">
@@ -309,33 +268,27 @@ const IncidentDetails = () => {
         </div>
       </div>
 
-      <div className="mt-4">
-        {isHandler && status != "Resolved" && status != "Loading..." && (
+      <div className="buttonss mt-10">
+        {isHandler && status !== "Resolved" && status !== "Loading..." && (
           <>
-            <button
-              type="submit"
-              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-            >
+            <button type="submit" className={`button-style`}>
               <Link to={"/response-form/" + lastPart}>
                 Complete Response Form
               </Link>
             </button>
-            <button
-              className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-              onClick={ResolveIndicent}
-            >
+
+            <button className={`button-style`} onClick={ResolveIndicent}>
               Mark as Resolved
             </button>
           </>
         )}
+
         <PDFDownloadLink document={<PDFFile />} fileName="incident_summary.pdf">
-          {({ blob, url, loading, error }) =>
-            loading ? (
-              <button>Loading Document..</button>
-            ) : (
-              <button>Save as PDF</button>
-            )
-          }
+          {({ loading }) => (
+            <button className={`button-style`} style={{ marginLeft: "1px" }}>
+              {loading ? "Loading Document..." : "Save as PDF"}
+            </button>
+          )}
         </PDFDownloadLink>
       </div>
     </div>
