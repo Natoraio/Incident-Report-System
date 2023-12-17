@@ -6,6 +6,7 @@ import { KJUR } from "jsrsasign";
 import withAuth from "../../components/withAuth";
 import IncidentTypeChart from "../../components/incidentTypeChart";
 import IncidentsPerMonthChart from "../../components/incidentsPerMonthChart";
+import styled, { createGlobalStyle } from "styled-components";
 
 const HistoryStatistics = () => {
   const [incidents, setIncidents] = useState([]);
@@ -20,18 +21,10 @@ const HistoryStatistics = () => {
 
   const navigate = useNavigate();
 
-  // const currentMonth = new Date().getMonth() + 1;
-
-  // useEffect(() => {
-  //   fetchIncidents("http://localhost:8800/api/getIncidents");
-  // }, []);
-
   const fetchIncidents = (url) => {
     Axios.get(url)
       .then((response) => {
-        console.log("getResolvedIncidents is reached");
         setIncidents(response.data.incidents);
-        console.log(response.data.incidents);
       })
       .catch((error) => {
         console.error("Error fetching incidents:", error);
@@ -46,9 +39,7 @@ const HistoryStatistics = () => {
   const fetchNumberOfIncidentsPerMonth = (url) => {
     Axios.get(url, { params: { month: selectedMonth, year: currentYear } })
       .then((response) => {
-        console.log("getIncidentsPerMonth is reached");
         setNoIncidents(response.data.result[0].incidentCount);
-        console.log(response.data.result);
       })
       .catch((error) => {
         console.error("Error fetching incidents:", error);
@@ -66,11 +57,9 @@ const HistoryStatistics = () => {
   const fetchAvgResolveTime = (url) => {
     Axios.get(url, { params: { month: selectedMonth, year: currentYear } })
       .then((response) => {
-        console.log("getAvgResolveTime is reached");
         setAvgResolveTime(
           Math.ceil(response.data.result[0].averageResolveTime)
         );
-        console.log(response.data.result);
       })
       .catch((error) => {
         console.error("Error fetching incidents:", error);
@@ -83,15 +72,12 @@ const HistoryStatistics = () => {
     }
   }, [selectedMonth]);
 
-  // NEED TO FILTER THE INCIDENTS TO DISPLAY ONLY RESOLVED INCIDENTS
-
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token) {
       const decodedToken = KJUR.jws.JWS.parse(token);
       const userID = decodedToken.payloadObj.userID;
       setHandlerId(userID);
-      console.log(decodedToken.payloadObj);
     } else {
       navigate("/login");
     }
@@ -100,8 +86,6 @@ const HistoryStatistics = () => {
         params: { UserID: handlerId, UserType: "handler" },
       })
         .then((response) => {
-          //   setUsername(response.data.result[0].username);
-          //   setName(response.data.result[0].name);
           console.log(response.data.result[0]);
         })
         .catch((error) => {
@@ -110,57 +94,170 @@ const HistoryStatistics = () => {
     }
   }, [handlerId]);
 
+  const GlobalStyle = createGlobalStyle`
+  * { 
+  margin: 0;
+  padding: 0;
+  }
+  
+  body {
+    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    // padding-top: 50px;
+    padding-left: 100px;
+    padding-right: 100px;
+    font-size: 24px;
+    font-family: 'Kanit', sans-serif;
+  }
+`;
+
+  const Button = styled.button`
+    margin-bottom: 10px;
+  `;
+
+  const PageTitle = styled.h1`
+    margin-bottom: 20px;
+  `;
+
+  const StatisticParagraph = styled.p`
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  `;
+
+  const ChartsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    gap: 20px;
+  `;
+
+  const SelectMonth = styled.select`
+    // padding: 10px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    margin: 20px;
+  `;
+
+  const IncidentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+  `;
+
+  const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+    margin-left: 1rem;
+  `;
+
+  const CategorySeparator = styled.div`
+    display: flex;
+    // flex-direction: flex-start;
+    justify-content: space-between;
+    // align-items: center;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 3px solid #d9d9d9;
+
+    span {
+      flex: 1;
+      text-align: center;
+      padding: 1rem;
+    }
+  `;
+
+  const IncidentSeparator = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+
+    span {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+    }
+  `;
+
+  const StyledIncident = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    border-bottom: 1px solid #ccc;
+    padding: 0.5rem;
+    font-size: 18px;
+  `;
+
   return (
-    <div>
-      <button>
-        <Link to="/handler-home">Back to home</Link>
-      </button>
-      <h1>Incident History and Statistics</h1>
-      <p>The number of incidents this month is: {noIncidents}</p>
-      <p>The average resolve time this month is: {avgResolveTime}</p>
+    <>
+      <GlobalStyle />
+      <Button>
+        <Link to="/handler-home">◀ Back to home</Link>
+      </Button>
+      <PageTitle>Incident History and Statistics</PageTitle>
+      <StatisticParagraph>
+        The number of incidents this month is: {noIncidents}
+      </StatisticParagraph>
+      <StatisticParagraph>
+        The average resolve time this month is: {avgResolveTime}
+      </StatisticParagraph>
 
-      <IncidentsPerMonthChart />
-      <IncidentTypeChart selectedMonth={selectedMonth} />
-      <select
-        className="p-3 rounded"
-        value={selectedMonth}
-        onChange={(event) => {
-          setSelectedMonth(event.target.value);
-        }}
-      >
-        <option value="">Select Month</option>
-        <option value="1">January</option>
-        <option value="2">Febuary</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
-      </select>
+      <ChartsContainer>
+        <IncidentsPerMonthChart />
+        <IncidentTypeChart selectedMonth={selectedMonth} />
 
-      <div className="incident-container">
+        <SelectMonth
+          className="p-3"
+          value={selectedMonth}
+          onChange={(event) => {
+            setSelectedMonth(event.target.value);
+          }}
+        >
+          <option value="">Select Month</option>
+          <option value="1">January</option>
+          <option value="2">Febuary</option>
+          <option value="3">March</option>
+          <option value="4">April</option>
+          <option value="5">May</option>
+          <option value="6">June</option>
+          <option value="7">July</option>
+          <option value="8">August</option>
+          <option value="9">September</option>
+          <option value="10">October</option>
+          <option value="11">November</option>
+          <option value="12">December</option>
+        </SelectMonth>
+      </ChartsContainer>
+
+      <CategorySeparator>
+        <span>Incident Name</span>
+        <span>Resolved Date</span>
+        <span>Incident Type</span>
+      </CategorySeparator>
+
+      <IncidentContainer>
         {incidents &&
           incidents.map((incident, index) => (
-            <IncidentHistory
+            <StyledLink
+              to={`/incident-details/${incident.incidentID}`}
               key={incident.incidentID}
-              id={incident.incidentID}
-              name={incident.incidentName}
-              resolvedDate={
-                incident.dateResolved ? incident.dateResolved.split("T")[0] : ""
-              }
-              incidentType={incident.incidentTypeName}
-              handlerID={handlerId}
-            />
+            >
+              <StyledIncident>
+                <IncidentSeparator>
+                  <span>{incident.incidentName}</span>
+                  <span>
+                    {incident.dateResolved
+                      ? incident.dateResolved.split("T")[0]
+                      : ""}
+                  </span>
+                  <span>{incident.incidentTypeName}</span>
+                </IncidentSeparator>
+              </StyledIncident>
+            </StyledLink>
           ))}
-      </div>
-
-      {/* Add your graphs here */}
-    </div>
+      </IncidentContainer>
+    </>
   );
 };
 

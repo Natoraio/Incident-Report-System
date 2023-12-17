@@ -12,8 +12,12 @@ const HandlerMain = () => {
   const [name, setName] = useState("");
   const [incidents, setIncidents] = useState([]);
   const [naviateLogin, setNaviateLogin] = useState(false);
-
   const navigate = useNavigate();
+  const [focusedButton, setFocusedButton] = useState(
+    "Latest First",
+    "Criticality: Lowest First",
+    "Criticality: Highest First"
+  );
 
   useEffect(() => {
     fetchIncidents("http://localhost:8800/api/getIncidents");
@@ -104,37 +108,47 @@ const HandlerMain = () => {
     padding-top: 50px;
     padding-left: 100px;
     padding-right: 100px;
-    color: black;
-    background-color: #ffffff;
-    font-size: 25px;
+    font-size: 20px;
     font-family: 'Kanit', sans-serif;
   }
 `;
 
-  const Content = styled.div`
-    margin: 2rem;
+  const ContentHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: space-between;
+  `;
+
+  const LeftContent = styled.div`
+    flex: 1;
+  `;
+
+  const RightContent = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
   `;
 
   const ActionButtons = styled.div`
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    padding: 2rem;
-    margin-bottom: 0.5rem;
-    font-size: 30px;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 1.5rem;
+    font-size: 20px;
+    white-space: nowrap;
   `;
 
   const StyledButton = styled.button`
-    padding: 3px;
-    margin-left: 1rem;
-    background-color: #ffffff;
+    width: 300px;
+    border-radius: 100px;
+    margin: 1rem;
+    background-color: ${(props) =>
+      props.isFocused ? "#d9d9d9" : "transparent"};
+    transition: background-color 0.3s;
 
-    &:hover,
-    &:focus {
-      background-color: #d9d9d9;
+    &:hover {
       cursor: pointer;
     }
 
@@ -143,95 +157,144 @@ const HandlerMain = () => {
     }
   `;
 
-  const StyledLink = styled(Link)`
-    text-decoration: none;
-    color: black;
-
-    margin-left: 1rem;
-  `;
-
   const CategorySeparator = styled.div`
-    width: 100%;
     display: flex;
+    // flex-direction: flex-start;
     justify-content: space-between;
-    padding: 1rem;
+    // align-items: center;
     margin-bottom: 0.5rem;
-    border-bottom: 5px solid #d9d9d9;
-    font-size: 30px;
-    margin-left: 3rem;
-    margin-right: 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 3px solid #d9d9d9;
+
+    span {
+      flex: 1;
+      text-align: center;
+      padding: 1rem;
+    }
   `;
 
   const IncidentSeparator = styled.div`
-    width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid #ccc;
+    justify-content: space-evenly;
+
+    span {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem;
+    }
   `;
 
   const StyledIncident = styled.div`
-    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 1rem;
-    margin-top: 1rem;
+    justify-content: space-evenly;
+    border-bottom: 1px solid #ccc;
+    // padding: 0.5rem;
+    font-size: 18px;
+    padding-bottom: 1.5rem;
+  `;
+  const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+    margin-left: 1rem;
   `;
 
   return (
     <>
-      <button className="p-3 m-2" onClick={handleLogout}>
-        Log out
-      </button>
-      <button className="p-3 bg-blue-500 ml-2">
-        <Link to={"/history-statistics"}>View History and Statistics</Link>
-      </button>
       <GlobalStyle />
-      <Content>
-        <h1>Welcome Back! {name}</h1>
-        <h2 className="mt-5">To SIIT Cyber Incident Report Database System</h2>
-        <h3 className="mt-5">
-          Click on an incident or select what action you want to complete today.
-        </h3>
-        <ActionButtons>
-          <p>Sort incidents by: </p>
-          <StyledButton onClick={sortByLatestDateAndTime}>
-            Latest First
-          </StyledButton>
-          <StyledButton onClick={sortByCriticalityLowToHigh}>
-            Criticality: Lowest First
-          </StyledButton>
-          <StyledButton onClick={sortByCriticalityHighToLow}>
-            Criticality: Highest First
-          </StyledButton>
-        </ActionButtons>
+      <ContentHeader>
+        <LeftContent>
+          <h1>Welcome Back! {name}</h1>
+          <h2 className="mt-5">
+            To SIIT Cyber Incident Report Database System
+          </h2>
+          <h3 className="mt-5">
+            Click on an incident or select what action you want to complete
+            today.
+          </h3>
+        </LeftContent>
+        <RightContent>
+          <button className="p-3 m-2" onClick={handleLogout}>
+            Not you?{" "}
+            <span
+              style={{
+                textDecoration: "underline",
+                fontStyle: "italic",
+                fontWeight: "bold",
+              }}
+            >
+              Logout
+            </span>
+          </button>
 
-        <CategorySeparator>
-          <span>Incident Name</span>
-          <span>Progress/Status</span>
-          <span>Criticality Level</span>
-          <span>Report Date</span>
-        </CategorySeparator>
+          <button style={{ backgroundColor: "#390656", color: "#fff" }}>
+            <Link
+              to={"/history-statistics"}
+              style={{
+                color: "#fff",
+                textDecoration: "none",
+                ":hover": { backgroundColor: "#d9d9d9" },
+              }}
+            >
+              View History and Statistics
+            </Link>
+          </button>
+        </RightContent>
+      </ContentHeader>
+      <ActionButtons>
+        <p>Sort incidents by: </p>
+        <StyledButton
+          onClick={() => {
+            setFocusedButton("Latest First");
+            sortByLatestDateAndTime();
+          }}
+          isFocused={focusedButton === "Latest First"}
+        >
+          Latest First
+        </StyledButton>
+        <StyledButton
+          onClick={() => {
+            setFocusedButton("Criticality: Lowest First");
+            sortByCriticalityLowToHigh();
+          }}
+          isFocused={focusedButton === "Criticality: Lowest First"}
+        >
+          Criticality: Lowest First
+        </StyledButton>
+        <StyledButton
+          onClick={() => {
+            setFocusedButton("Criticality: Highest First");
+            sortByCriticalityHighToLow();
+          }}
+          isFocused={focusedButton === "Criticality: Highest First"}
+        >
+          Criticality: Highest First
+        </StyledButton>
+      </ActionButtons>
 
-        {incidents.map((incident, index) => (
-          <StyledLink
-            to={`/incident-details/${incident.incidentID}`}
-            key={incident.incidentID}
-          >
-            <StyledIncident>
-              <IncidentSeparator>
-                <span>{incident.incidentName}</span>
-                <span>{incident.status}</span>
-                <span>{incident.criticality}</span>
-                <span>{incident.dateReported.split("T")[0]}</span>
-              </IncidentSeparator>
-            </StyledIncident>
-          </StyledLink>
-        ))}
-      </Content>
+      <CategorySeparator>
+        <span>Incident Name</span>
+        <span>Progress / Status</span>
+        <span>Criticality Level</span>
+        <span>Reported Date</span>
+      </CategorySeparator>
+
+      {incidents.map((incident, index) => (
+        <StyledLink
+          to={`/incident-details/${incident.incidentID}`}
+          key={incident.incidentID}
+        >
+          <StyledIncident>
+            <IncidentSeparator>
+              <span>{incident.incidentName}</span>
+              <span>{incident.status}</span>
+              <span>{incident.criticality}</span>
+              <span>{incident.dateReported.split("T")[0]}</span>
+            </IncidentSeparator>
+          </StyledIncident>
+        </StyledLink>
+      ))}
     </>
   );
 };
