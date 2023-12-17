@@ -162,8 +162,8 @@ const ResponseForm = () => {
       </button>
       <h1>Incident Response Form</h1>
       <h2>
-        To report a new incident into the system, please fill in all the fields.
-        Image file upload is optional, but is very helpful!
+        To make updates / progress to this incident , please fill in these
+        fields. Image file upload is optional, but is very helpful!
       </h2>
       <div className="container mx-auto flex">
         <Content>
