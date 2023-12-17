@@ -10,6 +10,12 @@ import Swal from "sweetalert2";
 import { KJUR } from "jsrsasign";
 import withAuth from "../components/withAuth";
 
+const GlobalStyle = createGlobalStyle`
+  body {
+    font-family: 'Kanit', sans-serif;
+  }
+`;
+
 const IncidentDetails = () => {
   const urlPath = window.location.pathname;
   const parts = urlPath.split("/");
@@ -148,15 +154,17 @@ const IncidentDetails = () => {
   }, []);
 
   return (
+    <>
+    <GlobalStyle />
     <div className="p-4 ml-20">
       {isHandler && (
         <Link to="/handler-home" className="back-to-home-link">
-          Back to home
+          ◀ Back to home
         </Link>
       )}
       {!isHandler && (
         <Link to="/home" className="back-to-home-link">
-          Back to home
+          ◀ Back to home
         </Link>
       )}
       <h1 className="mt-5 ml-20">Incident Details Page</h1>
@@ -292,6 +300,7 @@ const IncidentDetails = () => {
         </PDFDownloadLink>
       </div>
     </div>
+    </>
   );
 };
 

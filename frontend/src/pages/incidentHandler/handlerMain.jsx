@@ -94,6 +94,7 @@ const HandlerMain = () => {
       navigate("/login");
     }
   };
+  
   const GlobalStyle = createGlobalStyle`
   * { 
   margin: 0;
